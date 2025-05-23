@@ -263,7 +263,8 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
                 <div className="p-4 bg-white rounded-lg">
                   <QRCodeSVG
                     // value={`upi://pay?pa=your-upi-id@oksbi&pn=YourAppName&am=${amount}&cu=INR`}
-                    value={`upi://pay?pa=ameyalaadd@ibl&pn=YourAppName&am=${amount}&cu=INR`}
+                    // value={`upi://pay?pa=ameyalaadd@ibl&pn=YourAppName&am=${amount}&cu=INR`}
+                    value={`upi://pay?pa=paytm.slizehr@pty&pn=BetABack&am=${amount}&cu=INR`}
                     size={180}
                   />
                 </div>
