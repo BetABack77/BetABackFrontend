@@ -7,11 +7,9 @@ import { Link, useNavigate } from "react-router-dom"; // For navigation after su
 const Signup: React.FC = () => {
   const navigate = useNavigate();
 
-
   const queryParams = new URLSearchParams(window.location.search);
-const ref = queryParams.get("ref");
-console.log("ref is ",ref); 
-
+  const ref = queryParams.get("ref");
+  console.log("ref is ", ref);
 
   // States for user inputs
   const [email, setEmail] = useState<string>("");
@@ -22,7 +20,7 @@ console.log("ref is ",ref);
   // State to control whether OTP has been sent
   const [otpSent, setOtpSent] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [referralCode, setReferralCode] = useState<string>(ref||"u");
+  const [referralCode, setReferralCode] = useState<string>(ref || "");
   const [dob, setDob] = useState<string>("");
 
   // State for feedback (error or success)
