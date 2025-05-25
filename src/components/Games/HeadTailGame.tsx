@@ -8,9 +8,8 @@ import { userService } from "../../Services/userService";
 import { setUser } from "../../features/userSlice";
 import Navbar from "../Navbar";
 import { WebSocket_URL } from "../../Services/axiosInstance";
-import { Howl } from 'howler';
-import countdownSound  from "../../assets//music/count.mp3"
-
+import { Howl } from "howler";
+import countdownSound from "../../assets//music/count.mp3";
 
 // const socket = io("http://localhost:3000");
 
@@ -20,10 +19,13 @@ export default function HeadTailGame() {
   // const { theme } = useTheme();
   // const isGreen = theme === "green";
 
-  const [sound] = useState(() => new Howl({
-  src: [countdownSound],
-  volume: 0.5
-}));
+  const [sound] = useState(
+    () =>
+      new Howl({
+        src: [countdownSound],
+        volume: 0.5,
+      })
+  );
 
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.user);
@@ -67,25 +69,26 @@ export default function HeadTailGame() {
   //   choiceRef.current = choice; // Update the ref whenever the choice changes
   // }, [choice]);
 
+  useEffect(() => {
+    if (timeLeft <= 5 && timeLeft > 0) {
+      sound.stop();
+      sound.play();
+    }
+
+    if (timeLeft === 0) {
+      sound.stop();
+    }
+
+    return () => {
+      sound.stop();
+    };
+  }, [timeLeft, sound]);
 
 
-  
-useEffect(() => {
-  if (timeLeft <= 5 && timeLeft > 0) {
-    sound.stop();
-    sound.play();
-  }
-
-  if (timeLeft === 0) {
-    sound.stop();
-  }
-
-  return () => {
-    sound.stop();
-  };
-}, [timeLeft, sound]);
 
   useEffect(() => {
+    console.log("Connecting to socket...");
+    socket.connect();
     socket.on("currentRound", ({ roundId, startedAt }) => {
       setIsUserBeted(false); // Reset user bet status for the new round
       setRoundId(roundId);
@@ -185,29 +188,6 @@ useEffect(() => {
         }
       }
     );
-
-    // socket.on("roundResult", ({ roundId, result }) => {
-    //   // console.log("choiceRef", choiceRef.current, "result", result);
-
-    //   setIsUserBeted(false); // Reset user bet status for the next round
-    //   setStatus(`Round ${roundId} Winner: ${result}`);
-    //   const currentChoice = choiceRef.current; // Access the latest choice from the ref
-    //   console.log("choice", currentChoice, "result", result);
-
-    //   if (currentChoice === null) {
-    //     toast.error("You didn't place a bet this round", { duration: 10000 });
-    //     return;
-    //   }
-    //   if (currentChoice === result) {
-    //     toast.success(`You won! Result: ${result}`, { duration: 10000 });
-    //   } else {
-    //     toast.error(`You lost! Result: ${result}`, { duration: 10000 });
-    //   }
-
-    //   setChoice(null);
-    //   setBetAmount(10);
-    //   // setResultHistory((prev) => [...prev, { roundId, result }].slice(-5));
-    // });
 
     socket.on("newRound", ({ roundId, startedAt }) => {
       setRoundId(roundId);

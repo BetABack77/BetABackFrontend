@@ -1,44 +1,3 @@
-// import React from "react";
-
-// import Navbar from "./Navbar";
-// import { Link } from "react-router-dom";
-
-
-// import { useSelector } from "react-redux";
-// import Allgames from "./Games/Allgames";
-
-// const Home: React.FC = () => {
-
-//   const user =useSelector((state: any) => state.user);
-//   return (
-//     <div
-//       className="
-//     "
-//     >
-//       <Navbar />
-//       <div className="flex flex-col items-center mt-[10vh]">
-//         <h1 className="text-4xl font-bold">Welcome to BeatABack</h1>
-//         <p className="text-lg">
-//           Discover the latest and greatest games, reviews, and news in the
-//           gaming world.
-//         </p>
-
-
-//         {
-//           user&&(
-//             <Allgames
-//             />
-//           )
-//         }
-
-       
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
-
 
 
 import React from "react";
@@ -46,6 +5,7 @@ import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Allgames from "./Games/Allgames";
+import ContactSection from "./ContactSection";
 
 const Home: React.FC = () => {
   const user = useSelector((state: any) => state.user);
@@ -104,6 +64,8 @@ const Home: React.FC = () => {
             {/* <Allgames/> */}
 
             <Allgames />
+
+            {user && <ContactSection/>}
           </section>
         )}
 

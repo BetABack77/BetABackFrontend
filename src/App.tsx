@@ -16,6 +16,7 @@ import ResetPassword from "./components/Profile/ResetPassword";
 import WheelGame from "./components/Games/WheelGame/WheelGame";
 import Navbar from "./components/Navbar";
 import ForexTradingApp from "./components/Games/ForexTrading/ForexTradingApp";
+import ContactSection from "./components/ContactSection";
 // import {ForexTradingApp} from "./components/Games/ForexTrading/ForexTradingApp";
 function App() {
   const route = createBrowserRouter([
@@ -43,6 +44,18 @@ function App() {
     {
       path: "/head-tail",
       element: <HeadTailGame />,
+    },
+    {
+      path: "/contact",
+      element:(
+
+        
+        <>
+          <Navbar />
+          <ContactSection />
+        </>
+      )
+   
     },
    
     {
