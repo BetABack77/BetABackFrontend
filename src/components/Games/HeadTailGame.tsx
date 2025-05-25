@@ -84,15 +84,15 @@ export default function HeadTailGame() {
     };
   }, [timeLeft, sound]);
 
-
-
   useEffect(() => {
     console.log("Connecting to socket...");
     socket.connect();
-    socket.on("currentRound", ({ roundId, startedAt }) => {
+    socket.on("currentRound", ({ roundId, startedAt, roundHistory }) => {
       setIsUserBeted(false); // Reset user bet status for the new round
       setRoundId(roundId);
       startTimer(startedAt);
+      setResultHistory(roundHistory || []);
+      setStatus("Current round started! Place your bet!");
     });
 
     socket.on("joinedRound", ({ roundId }) => {

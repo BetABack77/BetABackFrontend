@@ -47,17 +47,14 @@ function App() {
     },
     {
       path: "/contact",
-      element:(
-
-        
+      element: (
         <>
           <Navbar />
           <ContactSection />
         </>
-      )
-   
+      ),
     },
-   
+
     {
       path: "/games",
       // element: <Allgames  />,
@@ -85,8 +82,6 @@ function App() {
       path: "*",
       element: <NotFound />,
     },
-
-   
   ]);
   return (
     <Provider store={store}>
