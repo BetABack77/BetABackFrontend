@@ -410,7 +410,7 @@ export const ReferralSection = ({
               <span className=" bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">
                 3
               </span>
-              You get <span className="font-bold">₹300 </span> and they get{" "}
+              You get <span className="font-bold">₹50 </span> and they get{" "}
               <span className="font-bold">₹50</span> bonus!
             </li>
           </ul>
