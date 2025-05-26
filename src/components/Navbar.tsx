@@ -54,11 +54,16 @@ const Navbar: React.FC = () => {
               Home
             </Link>
           </li>
-          <li>
+          {
+            user && (
+ <li>
             <Link to="/games" className={`transition ${hoverColor}`}>
               Games
             </Link>
           </li>
+            )
+          }
+         
           {/* <li>
             <Link to="/about" className={`transition ${hoverColor}`}>
               About
