@@ -34,7 +34,7 @@ const Home: React.FC = () => {
                 Login
               </Link>
               <Link 
-                to="/register" 
+                to="/signup" 
                 className="px-8 py-3 border-2 border-blue-400 text-blue-400 rounded-full font-bold hover:bg-blue-400 hover:text-white transition-all transform hover:scale-105"
               >
                 Register
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
               Join thousands of players enjoying our games every day. Register now and get started!
             </p>
             <Link 
-              to="/register" 
+              to="/signup" 
               className="inline-block px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-bold hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg"
             >
               Get Started - It's Free
