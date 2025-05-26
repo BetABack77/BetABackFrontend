@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import io from "socket.io-client";
 import { TfiReload } from "react-icons/tfi";
@@ -51,6 +51,10 @@ export default function HeadTailGame() {
       createdAt: string;
     }>
   >([]);
+
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+const serverTimeOffsetRef = useRef(0);
+const lastSyncRef = useRef(0);
 
   const colors = {
     bg: "bg-black",
@@ -266,15 +270,73 @@ export default function HeadTailGame() {
     };
   }, []);
 
-  const startTimer = (startedAt: string) => {
-    const end = new Date(startedAt).getTime() + 30000;
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const left = Math.max(0, Math.floor((end - now) / 1000));
-      setTimeLeft(left);
-      if (left === 0) clearInterval(interval);
-    }, 1000);
+ 
+// Replace your startTimer function with this:
+const startTimer = (startedAt: string) => {
+  // Clear any existing interval
+  if (timerIntervalRef.current) {
+    clearInterval(timerIntervalRef.current);
+  }
+
+  // Calculate initial time remaining with server sync
+  const calculateRemaining = () => {
+    const serverNow = Date.now() + serverTimeOffsetRef.current;
+    const roundEnd = new Date(startedAt).getTime() + 30000;
+    return Math.max(0, Math.floor((roundEnd - serverNow) / 1000));
   };
+
+
+  
+  // Initial sync with server
+  const syncWithServer = () => {
+    const now = Date.now();
+    socket.emit('getServerTime', {}, (serverTime: number) => {
+      const roundTripTime = Date.now() - now;
+      serverTimeOffsetRef.current = serverTime - Date.now() + (roundTripTime / 2);
+      lastSyncRef.current = Date.now();
+      
+      // Update time immediately after sync
+      setTimeLeft(calculateRemaining());
+    });
+  };
+
+  // First sync
+  syncWithServer();
+
+  // Set up interval with drift correction
+  let expected = Date.now() + 1000;
+  const driftCorrection = (now: number) => {
+    const drift = now - expected;
+    expected += 1000;
+    return Math.max(0, 1000 - drift);
+  };
+
+  timerIntervalRef.current = setInterval(() => {
+    const now = Date.now();
+    
+    // Re-sync every 30 seconds or if drift is significant
+    if (now - lastSyncRef.current > 30000 || Math.abs(serverTimeOffsetRef.current) > 1000) {
+      syncWithServer();
+    }
+    
+    setTimeLeft(calculateRemaining());
+    
+    // Correct for drift
+    const nextTick = driftCorrection(now);
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = setTimeout(() => {
+        startTimer(startedAt); // Restart with fresh calculation
+      }, nextTick);
+    }
+  }, 1000);
+
+  return () => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
+  };
+};
 
   const handleChoice = (c: "head" | "tail") => setChoice(c);
 
