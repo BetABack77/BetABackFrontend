@@ -72,11 +72,10 @@ const ForexTradingApp = () => {
       })
   );
 
-
   // Add these refs at the component top
-const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-const serverTimeOffsetRef = useRef(0);
-const endTimeRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const serverTimeOffsetRef = useRef(0);
+  const endTimeRef = useRef(0);
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user);
   const [userData, setUserData] = useState(user);
@@ -109,7 +108,6 @@ const endTimeRef = useRef(0);
     amount: number;
   } | null>(null);
   //  const [timeLeft, setTimeLeft] = useState(30);
-
 
   // Clean up on unmount
   useEffect(() => {
@@ -161,52 +159,52 @@ const endTimeRef = useRef(0);
   // }, []);
 
   // Initialize socket connection
- 
- // Replace your startTimer function with this:
-const startTimer = useCallback((startedAt: string, serverTime?: number) => {
-  // Clear any existing timer
-  if (timerRef.current) {
-    clearInterval(timerRef.current);
-    timerRef.current = null;
-  }
 
-  // Calculate server-client time offset
-  if (serverTime) {
-    const now = Date.now();
-    serverTimeOffsetRef.current = serverTime - now;
-  }
-
-  // Calculate precise end time (server time + 30 seconds)
-  const serverStartTime = new Date(startedAt).getTime();
-  endTimeRef.current = serverStartTime + ROUND_DURATION;
-
-  // Initial calculation
-  const updateTimeLeft = () => {
-    const now = Date.now() + serverTimeOffsetRef.current;
-    const left = Math.max(0, endTimeRef.current - now);
-    setTimeLeft(Math.floor(left / 1000));
-
-    // Stop timer when round ends
-    if (left <= 0) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    }
-  };
-
-  // Initial update
-  updateTimeLeft();
-
-  // Start high-precision timer (100ms interval for smooth updates)
-  timerRef.current = setInterval(updateTimeLeft, 100);
-
-  return () => {
+  // Replace your startTimer function with this:
+  const startTimer = useCallback((startedAt: string, serverTime?: number) => {
+    // Clear any existing timer
     if (timerRef.current) {
       clearInterval(timerRef.current);
+      timerRef.current = null;
     }
-  };
-}, []);
+
+    // Calculate server-client time offset
+    if (serverTime) {
+      const now = Date.now();
+      serverTimeOffsetRef.current = serverTime - now;
+    }
+
+    // Calculate precise end time (server time + 30 seconds)
+    const serverStartTime = new Date(startedAt).getTime();
+    endTimeRef.current = serverStartTime + ROUND_DURATION;
+
+    // Initial calculation
+    const updateTimeLeft = () => {
+      const now = Date.now() + serverTimeOffsetRef.current;
+      const left = Math.max(0, endTimeRef.current - now);
+      setTimeLeft(Math.floor(left / 1000));
+
+      // Stop timer when round ends
+      if (left <= 0) {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+      }
+    };
+
+    // Initial update
+    updateTimeLeft();
+
+    // Start high-precision timer (100ms interval for smooth updates)
+    timerRef.current = setInterval(updateTimeLeft, 100);
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const newSocket = io(WebSocket_URL);
@@ -277,25 +275,22 @@ const startTimer = useCallback((startedAt: string, serverTime?: number) => {
     //   setHistory(data.history || []);
     // };
 
-
-
-
     // Update your socket event handlers
-const onGameState: SocketEvents["gameState"] = (data) => {
-  setRoundId(data.currentRound.roundId);
-  startTimer(data.currentRound.startedAt, data.currentRound.serverTime);
-  setHistory(data.history || []);
-  setConnected(true);
-  setStatus("Place your bet!");
-};
+    const onGameState: SocketEvents["gameState"] = (data) => {
+      setRoundId(data.currentRound.roundId);
+      startTimer(data.currentRound.startedAt, data.currentRound.serverTime);
+      setHistory(data.history || []);
+      setConnected(true);
+      setStatus("Place your bet!");
+    };
 
-const onNewRound: SocketEvents["newRound"] = (data) => {
-  setRoundId(data.roundId);
-  startTimer(data.startedAt, data.serverTime);
-  setHasBet(false);
-  setStatus("New round started! Place your bet!");
-  setHistory(data.history || []);
-};
+    const onNewRound: SocketEvents["newRound"] = (data) => {
+      setRoundId(data.roundId);
+      startTimer(data.startedAt, data.serverTime);
+      setHasBet(false);
+      setStatus("New round started! Place your bet!");
+      setHistory(data.history || []);
+    };
 
     // const startTimer = (startedAt: string) => {
     //   const end = new Date(startedAt).getTime() + 30000;
@@ -423,7 +418,7 @@ const onNewRound: SocketEvents["newRound"] = (data) => {
     // socket.on("userBets", onUserBets);
 
     // Register user and fetch initial data
-    socket.emit("registerUser", user._id);
+    socket.emit("registerUser", "updownGame");
     // socket.emit("getUserBets", user._id);
 
     return () => {
@@ -497,7 +492,7 @@ const onNewRound: SocketEvents["newRound"] = (data) => {
       };
 
       // Emit to the server
-      socket.emit("placeBet", {
+      socket.emit("placeBetForex", {
         userId: userData._id,
         roundId, // important to send roundId if server needs it
         choice,
