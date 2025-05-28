@@ -132,7 +132,7 @@ export default function HeadTailGame() {
 
     socket.on(
       "roundOutcome",
-      ({ result, choice, winningSide, amount, message }) => {
+      ({ result, choice, amount, message }) => {
         // console.log("Round outcome:", { result, choice, winningSide, amount });
 
         setStatus(message); // show status message
