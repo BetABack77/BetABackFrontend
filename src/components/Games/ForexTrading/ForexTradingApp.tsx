@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { FaCoins, FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { RiLiveFill } from "react-icons/ri";
 import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../features/userSlice";
 import { WebSocket_URL } from "../../../Services/axiosInstance";

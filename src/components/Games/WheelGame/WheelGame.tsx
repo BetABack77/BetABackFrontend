@@ -1195,7 +1195,7 @@ import { io, Socket } from "socket.io-client";
 import { WebSocket_URL } from "../../../Services/axiosInstance";
 import { useSelector } from "react-redux";
 import { UserData } from "../../Profile/types";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { userService } from "../../../Services/userService";
 import { setUser } from "../../../features/userSlice";
 import { useDispatch } from "react-redux";

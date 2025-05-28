@@ -434,7 +434,8 @@
 
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { DepositForm } from "./Profile/DepositForm";
 import { WithdrawForm } from "./Profile/WithdrawForm";
 import { ThemeType, UserData } from "./Profile/types";

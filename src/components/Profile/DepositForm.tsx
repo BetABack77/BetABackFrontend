@@ -1,5 +1,5 @@
 import { useState, useRef, ChangeEvent, useEffect } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
 import { useSelector } from "react-redux";
 import { userService } from "../../Services/userService";

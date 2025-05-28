@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import io from "socket.io-client";
 import { TfiReload } from "react-icons/tfi";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 // import { useTheme } from "../../utils/ThemeContext";
 import { userService } from "../../Services/userService";
 import { setUser } from "../../features/userSlice";

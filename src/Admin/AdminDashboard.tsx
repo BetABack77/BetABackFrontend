@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { adminService } from "../Services/adminService";
 import { useSelector } from "react-redux";
 import Navbar from "../components/Navbar";

@@ -272,7 +272,8 @@
 // };
 
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { userService } from "../../Services/userService";
 import { useSelector } from "react-redux";
 import { UserData } from "./types";
