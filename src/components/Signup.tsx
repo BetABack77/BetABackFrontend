@@ -3,6 +3,7 @@ import { useTheme } from "../utils/ThemeContext";
 import logo from "../assets/logo.jpg"; // Ensure the path to your logo is correct
 import { authService } from "../Services/authService"; // Replace with your actual service
 import { Link, useNavigate } from "react-router-dom"; // For navigation after successful signup
+import { toast } from "sonner";
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -56,7 +57,9 @@ const Signup: React.FC = () => {
         setErrorMessage(res.message || "Failed to generate OTP");
       }
     } catch (error) {
-      setErrorMessage("An error occurred while generating OTP. Please try again.");
+      setErrorMessage(
+        "An error occurred while generating OTP. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -75,13 +78,31 @@ const Signup: React.FC = () => {
         dateOfBirth: dob,
       }; // Send details with OTP for signup
       const res = await authService.signup(data);
-      if (res.success) {
+      if (res?.success) {
+        toast.success("Signup successful! Please login to continue.");
         navigate("/login"); // Navigate to profile on successful signup
       } else {
         setErrorMessage(res.message || "Signup failed");
       }
     } catch (error) {
-      setErrorMessage("An error occurred during signup. Please try again.");
+      console.error("Error during signup:", error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "response" in error &&
+        typeof (error as any).response === "object" &&
+        (error as any).response !== null &&
+        "data" in (error as any).response
+      ) {
+        setErrorMessage(
+          (error as any).response.data?.message ||
+            "An error occurred during signup. Please try again."
+        );
+      } else {
+        setErrorMessage("An error occurred during signup. Please try again.");
+      }
+      setOtpSent(false); // Reset OTP sent state on error
+      // setErrorMessage("An error occurred during signup. Please try again.");
     } finally {
       setIsLoading(false);
     }

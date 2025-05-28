@@ -52,7 +52,7 @@ export default function HeadTailGame() {
     }>
   >([]);
 
-  console.log("roundId", roundId);
+
 
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | undefined>(
     undefined
@@ -109,19 +109,17 @@ export default function HeadTailGame() {
 
     // socket.on("roundResult", ({ roundId, result,message }) => {
 
-    //      console.log("Received roundResult:", roundId, result, message);
-
     //   setStatus(`Round ${roundId} Winner: ${result}`);
     //   setChoice(null);
     //   setBetAmount(10);
     //   setResultHistory((prev) => [...prev, { roundId, result }].slice(-5));
-    //   console.log("Round Result:", message);
+
     // });
 
     // socket.on("roundResult", ({ roundId, result, message }) => {
-    //   console.log("Received round result:", roundId, result, message);
+
     //   setStatus(`Round ${roundId} Winner: ${result}`);
-    //   console.log("choice", choice, "result", result);
+
     //   if (choice === result) {
     //     toast.success(`You won! Result: ${result}`, { duration: 10000 });
     //   } else {
@@ -135,7 +133,7 @@ export default function HeadTailGame() {
     socket.on(
       "roundOutcome",
       ({ result, choice, winningSide, amount, message }) => {
-        console.log("Round outcome:", { result, choice, winningSide, amount });
+        // console.log("Round outcome:", { result, choice, winningSide, amount });
 
         setStatus(message); // show status message
 
@@ -227,7 +225,7 @@ export default function HeadTailGame() {
     });
 
     socket.on("roundResultToAll", ({ room, roundId, result }) => {
-      console.log(`Room: ${room} → Round Result:`, roundId, result);
+      // console.log(`Room: ${room} → Round Result:`, roundId, result);
 
       setResultHistory((prev) =>
         [...prev, { room, roundId, result }].slice(-5)
@@ -241,7 +239,7 @@ export default function HeadTailGame() {
     });
 
     // socket.on("wonMessage", ({ message, amount }: any) => {
-    //   console.log("wonMessage", message, amount);
+    // console.log("wonMessage", message, amount);
 
     //   setUserdata((prev: any) => ({
     //     ...prev,
@@ -256,7 +254,7 @@ export default function HeadTailGame() {
     // });
 
     // socket.on("wonMessage", ({ message, amount }: any) => {
-    //   console.log("wonMessage", message, amount);
+    // console.log("wonMessage", message, amount);
 
     //   setUserdata((prev: any) => {
     //     const newBalance = prev.balance + amount;
@@ -529,20 +527,24 @@ export default function HeadTailGame() {
             <h2 className="text-lg font-bold mb-3">CHOOSE YOUR BET</h2>
             <div className="flex gap-3 mb-4">
               <button
-              disabled={!roundId || timeLeft <= 5}
+                disabled={!roundId || timeLeft <= 5}
                 onClick={() => handleChoice("head")}
                 className={`flex-1 py-3 rounded-lg font-bold transition-all ${
                   choice === "head" ? colors.active : colors.button
-                } ${!roundId || timeLeft <= 5 && "opacity-50 cursor-not-allowed"} `}
+                } ${
+                  !roundId || (timeLeft <= 5 && "opacity-50 cursor-not-allowed")
+                } `}
               >
                 HEAD
               </button>
               <button
-              disabled={!roundId || timeLeft<=5}
+                disabled={!roundId || timeLeft <= 5}
                 onClick={() => handleChoice("tail")}
                 className={`flex-1 py-3 rounded-lg font-bold transition-all ${
                   choice === "tail" ? colors.active : colors.button
-                } ${!roundId || timeLeft <= 5 && "opacity-50 cursor-not-allowed"}`}
+                } ${
+                  !roundId || (timeLeft <= 5 && "opacity-50 cursor-not-allowed")
+                }`}
               >
                 TAIL
               </button>
@@ -559,12 +561,13 @@ export default function HeadTailGame() {
                 className={`w-full px-4 py-3 rounded-lg ${colors.input} focus:outline-none focus:ring-1 focus:ring-yellow-400`}
               />
               <button
-          
                 onClick={placeBet}
                 disabled={!choice || !betAmount || timeLeft <= 5 || !roundId}
                 className={`w-full py-3 rounded-lg font-bold bg-yellow-600 hover:bg-yellow-500 transition-all ${
                   (!choice || !betAmount) && "opacity-50 cursor-not-allowed"
-                }  ${!roundId || timeLeft <= 5 && "opacity-50 cursor-not-allowed"}`}
+                }  ${
+                  !roundId || (timeLeft <= 5 && "opacity-50 cursor-not-allowed")
+                }`}
               >
                 PLACE BET
               </button>

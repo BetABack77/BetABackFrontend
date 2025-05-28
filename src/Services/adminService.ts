@@ -10,7 +10,7 @@ class AdminService {
         },
       });
 
-      console.log("Pending Withdraws:", res.data);
+      // console.log("Pending Withdraws:", res.data);
       if (res.data.success) {
         return res.data;
       }
@@ -28,7 +28,7 @@ class AdminService {
         },
       });
 
-      console.log("Pending deposits:", res.data);
+      // console.log("Pending deposits:", res.data);
       if (res.data.success) {
         return res.data;
       }
@@ -47,7 +47,7 @@ class AdminService {
         },
       });
 
-      console.log("Deposit verification response:", res.data);
+      // console.log("Deposit verification response:", res.data);
       if (res.data.success) {
         toast.success("Deposit verified successfully");
         return res.data;
@@ -67,7 +67,7 @@ class AdminService {
         },
       });
 
-      console.log("Withdraw verification response:", res.data);
+      // console.log("Withdraw verification response:", res.data);
       if (res.data.success) {
         toast.success("Withdraw verified successfully");
         return res.data;
@@ -87,7 +87,7 @@ class AdminService {
         },
       });
 
-      console.log("Approved deposits:", res.data);
+      // console.log("Approved deposits:", res.data);
       if (res.data.success) {
         return res.data;
       }
@@ -105,7 +105,7 @@ class AdminService {
         },
       });
 
-      console.log("Approved withdraws:", res.data);
+      // console.log("Approved withdraws:", res.data);
       if (res.data.success) {
         return res.data;
       }
@@ -123,7 +123,7 @@ class AdminService {
         },
       });
 
-      console.log("Deposit history:", res.data);
+      // console.log("Deposit history:", res.data);
       if (res.data.success) {
         return res.data;
       }
@@ -141,7 +141,7 @@ class AdminService {
         },
       });
 
-      console.log("Withdraw history:", res.data);
+      // console.log("Withdraw history:", res.data);
       if (res.data.success) {
         return res.data;
       }
@@ -160,7 +160,7 @@ class AdminService {
         },
       });
 
-      console.log("Deposit rejection response:", res.data);
+      // console.log("Deposit rejection response:", res.data);
       if (res.data.success) {
         toast.success("Deposit rejected successfully");
         return res.data;
@@ -180,7 +180,7 @@ class AdminService {
         },
       });
 
-      console.log("Withdraw rejection response:", res.data);
+      // console.log("Withdraw rejection response:", res.data);
       if (res.data.success) {
         toast.success("Withdraw rejected successfully");
         return res.data;

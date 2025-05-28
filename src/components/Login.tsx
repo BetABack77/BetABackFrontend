@@ -6,6 +6,7 @@ import { authService } from "../Services/authService";
 import { useDispatch } from "react-redux";
 import { setUser } from "../features/userSlice";
 import { Link, useNavigate} from "react-router-dom";
+import { toast } from "sonner";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const Login: React.FC = () => {
       const data = { email, password };
       const res = await authService.login(data);
       if (res.success) {
+        toast.success("Login successful!");
         setIsLoggedIn(false);
         navigate("/profile");
         dispatch(setUser(res.data));

@@ -20,7 +20,7 @@ const ROUND_DURATION = 30000;
 
 // Define types for your socket events
 type SocketEvents = {
-  gameState: (data: {
+  risefall_gameState: (data: {
     currentRound: {
       roundId: string;
       startedAt: string;
@@ -29,22 +29,22 @@ type SocketEvents = {
     };
     history: RoundHistory[];
   }) => void;
-  newRound: (data: {
+  risefall_newRound: (data: {
     roundId: string;
     startedAt: string;
     history: RoundHistory[];
     serverTime?: number; // Optional, if server sends current time
   }) => void;
-  roundOutcome: (data: {
+  risefall_roundOutcome: (data: {
     result: "win" | "lose";
     amount: number;
     message: string;
     choice: string;
   }) => void;
-  betPlaced: (data: { amount: number; choice: "up" | "down" }) => void;
-  balanceUpdate: (data: { balance: number }) => void;
-  error: (message: string) => void;
-  userBets: (data: UserBet[]) => void;
+  risefall_betPlaced: (data: { amount: number; choice: "up" | "down" }) => void;
+  risefall_balanceUpdate: (data: { balance: number }) => void;
+  risefall_error: (message: string) => void;
+  risefall_userBets: (data: UserBet[]) => void;
 };
 
 type RoundHistory = {
@@ -228,7 +228,7 @@ const ForexTradingApp = () => {
       );
       setUserHistory(response.data);
     } catch (error) {
-      console.error("Failed to fetch user history:", error);
+      // console.error("Failed to fetch user history:", error);
       toast.error("Failed to load history");
     }
   };
@@ -254,6 +254,10 @@ const ForexTradingApp = () => {
     }
   }, [userData?._id]);
 
+  useEffect(() => {
+    if (!socket || !user?._id) return;
+  }, []);
+
   // Set up socket events
   useEffect(() => {
     if (!socket || !user?._id) return;
@@ -267,7 +271,7 @@ const ForexTradingApp = () => {
     // };
 
     // const onNewRound: SocketEvents["newRound"] = (data) => {
-    //   console.log("new round started ", data);
+
     //   setRoundId(data.roundId);
     //   startTimer(data.startedAt);
     //   setHasBet(false);
@@ -276,7 +280,8 @@ const ForexTradingApp = () => {
     // };
 
     // Update your socket event handlers
-    const onGameState: SocketEvents["gameState"] = (data) => {
+    const onGameState: SocketEvents["risefall_gameState"] = (data) => {
+      // console.log("🟢 GameState received", data);
       setRoundId(data.currentRound.roundId);
       startTimer(data.currentRound.startedAt, data.currentRound.serverTime);
       setHistory(data.history || []);
@@ -284,7 +289,8 @@ const ForexTradingApp = () => {
       setStatus("Place your bet!");
     };
 
-    const onNewRound: SocketEvents["newRound"] = (data) => {
+    const onNewRound: SocketEvents["risefall_newRound"] = (data) => {
+      // console.log("new round started");
       setRoundId(data.roundId);
       startTimer(data.startedAt, data.serverTime);
       setHasBet(false);
@@ -302,13 +308,14 @@ const ForexTradingApp = () => {
     //   }, 1000);
     // };
 
-    const onRoundOutcome: SocketEvents["roundOutcome"] = ({
+    const onRoundOutcome: SocketEvents["risefall_roundOutcome"] = ({
       result,
       amount,
       message,
       choice,
     }) => {
       setStatus(message);
+      // console.log("Round outcome:", result, amount, message, choice);
       toast[result === "win" ? "success" : "error"](message);
 
       if (result === "win") {
@@ -323,7 +330,7 @@ const ForexTradingApp = () => {
           })
         );
 
-        console.log("user amount is ", amount);
+        // console.log("user amount is ", amount);
 
         setUserHistory((prev) => [
           {
@@ -351,10 +358,10 @@ const ForexTradingApp = () => {
         ]);
       }
 
-      console.log("round outcome", result, amount, message, choice);
+      // console.log("round outcome", result, amount, message, choice);
 
       if (!placedBetRef.current) {
-        console.log("No bet placed for this round");
+        // console.log("No bet placed for this round");
         return;
       }
 
@@ -369,7 +376,6 @@ const ForexTradingApp = () => {
       //     payout: amount, // example: amount * 2 or custom logic
       //     createdAt: new Date().toISOString(),
       //   };
-      //   console.log("new bet in win ", newBet);
 
       //   setUserBets((prev) => [...prev, newBet]);
       // } else {
@@ -381,7 +387,6 @@ const ForexTradingApp = () => {
       //     payout: 0,
       //     createdAt: new Date().toISOString(),
       //   };
-      //   console.log("new bet in loose ", newBet);
 
       //   setUserBets((prev) => [...prev, newBet]);
       // }
@@ -391,17 +396,22 @@ const ForexTradingApp = () => {
       setPlacedBet(null);
     };
 
-    const onBetPlaced: SocketEvents["betPlaced"] = ({ amount, choice }) => {
+    const onBetPlaced: SocketEvents["risefall_betPlaced"] = ({
+      amount,
+      choice,
+    }) => {
       setHasBet(true);
       setStatus(`Bet placed: ₹${amount} on ${choice}`);
     };
 
-    const onBalanceUpdate: SocketEvents["balanceUpdate"] = ({ balance }) => {
+    const onBalanceUpdate: SocketEvents["risefall_balanceUpdate"] = ({
+      balance,
+    }) => {
       setUserData((prev: any) => ({ ...prev, balance }));
       dispatch(setUser({ ...userData, balance }));
     };
 
-    const onError: SocketEvents["error"] = (message) => {
+    const onError: SocketEvents["risefall_error"] = (message) => {
       console.log("error msg is ", message);
     };
 
@@ -409,57 +419,30 @@ const ForexTradingApp = () => {
     //   setUserBets(bets);
     // };
 
-    socket.on("gameState", onGameState);
-    socket.on("newRound", onNewRound);
-    socket.on("roundOutcome", onRoundOutcome);
-    socket.on("betPlaced", onBetPlaced);
-    socket.on("balanceUpdate", onBalanceUpdate);
-    socket.on("error", onError);
+    socket.on("risefall_gameState", onGameState);
+    socket.on("risefall_newRound", onNewRound);
+    socket.on("risefall_roundOutcome", onRoundOutcome);
+    socket.on("risefall_betPlaced", onBetPlaced);
+    socket.on("risefall_balanceUpdate", onBalanceUpdate);
+    socket.on("risefall_error", onError);
     // socket.on("userBets", onUserBets);
 
     // Register user and fetch initial data
-    socket.emit("registerUser", "updownGame");
+    socket.emit("risefall_registerUser", "updownGame");
     // socket.emit("getUserBets", user._id);
 
     return () => {
       if (socket) {
-        socket.off("gameState", onGameState);
-        socket.off("newRound", onNewRound);
-        socket.off("roundOutcome", onRoundOutcome);
-        socket.off("betPlaced", onBetPlaced);
-        socket.off("balanceUpdate", onBalanceUpdate);
-        socket.off("error", onError);
+        socket.off("risefall_gameState", onGameState);
+        socket.off("risefall_newRound", onNewRound);
+        socket.off("risefall_roundOutcome", onRoundOutcome);
+        socket.off("risefall_betPlaced", onBetPlaced);
+        socket.off("risefall_balanceUpdate", onBalanceUpdate);
+        socket.off("risefall_error", onError);
         // socket.off("userBets", onUserBets);
       }
     };
   }, [socket, user?._id]);
-
-  // const placeBet = useCallback(
-  //   (choice: "up" | "down") => {
-  //     if (!choice) return;
-  //     if (!socket || !userData?._id) return;
-  //     if (hasBet) return toast.error("You already bet this round");
-  //     // if (timeLeft < 5) return toast.error("Round is ending soon");
-  //     if (betAmount < 1) return toast.error("Invalid bet amount");
-  //     if (userData.balance < betAmount)
-  //       return toast.error("Insufficient balance");
-
-  //     setPlacedBet({
-  //       roundId,
-  //       choice: choice as "up" | "down",
-  //       amount: betAmount,
-  //     });
-
-  //     console.log("placed bet is ", placedBet);
-
-  //     socket.emit("placeBet", {
-  //       userId: userData._id,
-  //       choice,
-  //       amount: betAmount,
-  //     });
-  //   },
-  //   [socket, userData, betAmount, hasBet]
-  // );
 
   const handleBetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -508,7 +491,7 @@ const ForexTradingApp = () => {
   const quickBets = [10, 50, 100, 500];
 
   useEffect(() => {
-    console.log("placedBet changed:", placedBet);
+    // console.log("placedBet changed:", placedBet);
   }, [placedBet]);
 
   const getUserBalance = async () => {
@@ -527,7 +510,7 @@ const ForexTradingApp = () => {
         );
       } else toast.error(res?.message || "Failed to fetch balance");
     } catch (error) {
-      console.error("Balance error:", error);
+      // console.error("Balance error:", error);
       toast.error("Error fetching balance");
     }
   };
