@@ -56,7 +56,7 @@ const Signup: React.FC = () => {
         setErrorMessage(res.message || "Failed to generate OTP");
       }
     } catch (error) {
-      setErrorMessage("An error occurred while generating OTP.");
+      setErrorMessage("An error occurred while generating OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +81,7 @@ const Signup: React.FC = () => {
         setErrorMessage(res.message || "Signup failed");
       }
     } catch (error) {
-      setErrorMessage("An error occurred during signup.");
+      setErrorMessage("An error occurred during signup. Please try again.");
     } finally {
       setIsLoading(false);
     }

@@ -17,6 +17,7 @@ import WheelGame from "./components/Games/WheelGame/WheelGame";
 import Navbar from "./components/Navbar";
 import ForexTradingApp from "./components/Games/ForexTrading/ForexTradingApp";
 import ContactSection from "./components/ContactSection";
+// import { Toaster, toast } from 'sonner';
 // import {ForexTradingApp} from "./components/Games/ForexTrading/ForexTradingApp";
 function App() {
   const route = createBrowserRouter([
@@ -83,10 +84,14 @@ function App() {
       element: <NotFound />,
     },
   ]);
+
+  // toast.success('Stylish toast from Sonner!');
   return (
     <Provider store={store}>
       <RouterProvider router={route} />
+
       <Toaster />
+       {/* <Toaster position="top-right" richColors />; */}
     </Provider>
   );
 }

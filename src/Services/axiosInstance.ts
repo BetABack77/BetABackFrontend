@@ -1,15 +1,12 @@
 import axios from "axios";
 
+const BASE_URL =
+  import.meta.env.VITE_BASE_URL || "https://betabackbackend.onrender.com";
+export const WebSocket_URL =
+  import.meta.env.VITE_WEBSOCKET_URL || "https://betabackbackend.onrender.com";
 
-
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-export  const WebSocket_URL = import.meta.env.VITE_WEBSOCKET_URL;
 // export const BASE_URL = "http://localhost:3000";
 
-// export const BASE_URL = "https://betabackbackend.onrender.com";
-
-// export const WebSocket_URL = "https://betabackbackend.onrender.com/";
 // export const WebSocket_URL = "http://localhost:3000";
 // Create an Axios instance
 const axiosInstance = axios.create({
