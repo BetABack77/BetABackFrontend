@@ -307,17 +307,17 @@ const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link 
                 to="/signup" 
-                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-bold hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg hover:shadow-purple-500/30  items-center justify-center gap-2"
+                className=" px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-bold hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg hover:shadow-purple-500/30  items-center justify-center gap-2 flex"
               >
                 Sign Up Free
                 <FiArrowRight />
               </Link>
-              <Link 
-                to="/games" 
+              {/* <Link 
+                to="/signup" 
                 className="inline-block px-8 py-4 border-2 border-white/20 text-white rounded-full font-bold hover:bg-white/10 transition-all transform hover:scale-105 hover:shadow-lg hover:shadow-white/10"
               >
                 Explore Games
-              </Link>
+              </Link> */}
             </div>
           </motion.section>
         )}

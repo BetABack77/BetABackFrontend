@@ -1,6 +1,7 @@
+
 // import { useState, useEffect } from "react";
 // import { useSelector } from "react-redux";
-// import toast from "react-hot-toast";
+// import { toast } from "sonner";
 // import { DepositForm } from "./Profile/DepositForm";
 // import { WithdrawForm } from "./Profile/WithdrawForm";
 // import { ThemeType, UserData } from "./Profile/types";
@@ -11,8 +12,14 @@
 
 // import { TfiReload } from "react-icons/tfi";
 // import { ReferralSection } from "./Profile/ReferralSection";
+// import { ChangePasswordForm } from "./ChangPasswordForm";
 
-// type ActiveTab = "profile" | "deposit" | "withdraw" | "referral";
+// type ActiveTab =
+//   | "profile"
+//   | "deposit"
+//   | "withdraw"
+//   | "referral"
+//   | "change-password";
 
 // export const Profile = () => {
 //   const dispatch = useDispatch();
@@ -29,18 +36,8 @@
 //     setUserdata(userData);
 //   }, [userData]);
 
-//   // const handleDeposit = (amount: number) => {
-//   //   setIsLoading(true);
-//   //   // Simulate API call
-//   //   setTimeout(() => {
-//   //     toast.success(`Deposit of ₹${amount} submitted successfully!`);
-//   //     setIsLoading(false);
-//   //   }, 1500);
-//   // };
-
 //   const handleWithdraw = (amount: number) => {
 //     setIsLoading(true);
-//     // Simulate API call
 //     setTimeout(() => {
 //       toast.success(`Withdrawal request of ₹${amount} submitted successfully!`);
 //       setIsLoading(false);
@@ -64,13 +61,47 @@
 //             token: user.token || "",
 //           })
 //         );
-//         // toast.success("Balance fetched successfully!");
 //       } else {
 //         toast.error(res?.message || "Failed to fetch balance");
 //       }
 //     } catch (error) {
 //       console.error("Error fetching deposits:", error);
 //       toast.error("Something went wrong while fetching balance");
+//     }
+//   };
+
+//   const handlePasswordChange = async (
+//     oldPassword: string,
+//     newPassword: string
+//   ) => {
+//     setIsLoading(true);
+//     try {
+//       if (!user?.token) {
+//         toast.error("Authentication required");
+//         return;
+//       }
+//       const data = {
+//         oldPassword: oldPassword,
+//         newPassword: newPassword,
+//         email: user.email,
+//       };
+
+//       const response = await userService.changePassword(
+//         data,
+//         userData.token || ""
+//       );
+
+//       if (response?.success) {
+//         toast.success("Password changed successfully!");
+//         setActiveTab("profile");
+//       } else {
+//         toast.error(response?.message || "Failed to change password");
+//       }
+//     } catch (error) {
+//       console.error("Error changing password:", error);
+//       toast.error("Something went wrong while changing password");
+//     } finally {
+//       setIsLoading(false);
 //     }
 //   };
 
@@ -85,14 +116,20 @@
 //     : "bg-gray-700 hover:bg-gray-600";
 
 //   return (
-//     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+//     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 pt-20">
 //       <Navbar />
 //       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 //         {/* Tabs */}
-
 //         <div className="flex overflow-x-auto pb-2 mb-6 scrollbar-hide">
 //           <div className="flex space-x-1 rounded-lg bg-gray-200 dark:bg-gray-800 p-1">
-//             {(["profile", "deposit", "withdraw"] as ActiveTab[]).map((tab) => (
+//             {(
+//               [
+//                 "profile",
+//                 "deposit",
+//                 "withdraw",
+//                 "change-password",
+//               ] as ActiveTab[]
+//             ).map((tab) => (
 //               <button
 //                 key={tab}
 //                 onClick={() => setActiveTab(tab)}
@@ -106,7 +143,9 @@
 //                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700"
 //                 }`}
 //               >
-//                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
+//                 {tab === "change-password"
+//                   ? "Change Password"
+//                   : tab.charAt(0).toUpperCase() + tab.slice(1)}
 //               </button>
 //             ))}
 //           </div>
@@ -120,19 +159,19 @@
 //             <div className="p-6 md:p-8">
 //               <div className="flex flex-col md:flex-row gap-8 items-start">
 //                 <div className="w-full md:w-auto flex flex-col items-center">
-//                   <div className="relative group">
+//                   <div className="relative group flex ">
 //                     <img
 //                       src={
 //                         user.profilePic || "https://avatar.vercel.sh/username"
 //                       }
 //                       alt="Profile"
-//                       className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover shadow-lg border-4 border-white dark:border-gray-800 transition-transform duration-300 group-hover:scale-105"
+//                       className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white dark:border-gray-800 transition-transform duration-300 group-hover:scale-105 "
 //                     />
-//                     <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50">
+//                     {/* <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50">
 //                       <span className="text-white text-sm font-medium">
 //                         Edit
 //                       </span>
-//                     </div>
+//                     </div> */}
 //                   </div>
 //                   <div className="mt-4 text-center">
 //                     <h2 className="text-2xl font-bold">{user.username}</h2>
@@ -166,60 +205,6 @@
 //                       </svg>
 //                       Account Details
 //                     </h3>
-//                     {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//                       {[
-//                         { label: "Role", value: user.Role, icon: "badge" },
-//                         {
-//                           label: "Balance",
-//                           value: `₹${user.balance?.toLocaleString() || "0"}`,
-//                           icon: "currency-rupee",
-//                           className: "font-bold text-lg",
-//                         },
-//                         {
-//                           label: "Account Status",
-//                           value: "Active",
-//                           icon: "shield-check",
-//                           className: "text-green-400",
-//                         },
-//                         {
-//                           label: "Member Since",
-//                           value: new Date().toLocaleDateString(),
-//                           icon: "calendar",
-//                         },
-//                       ].map((item) => (
-//                         <div key={item.label} className="flex items-start">
-//                           <svg
-//                             className={`w-5 h-5 mr-2 mt-0.5 ${textColor}`}
-//                             fill="none"
-//                             stroke="currentColor"
-//                             viewBox="0 0 24 24"
-//                             xmlns="http://www.w3.org/2000/svg"
-//                           >
-//                             <path
-//                               strokeLinecap="round"
-//                               strokeLinejoin="round"
-//                               strokeWidth={2}
-//                               d={`M${
-//                                 item.icon === "badge"
-//                                   ? "9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-//                                   : item.icon === "currency-rupee"
-//                                   ? "M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z"
-//                                   : item.icon === "shield-check"
-//                                   ? "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-//                                   : "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-//                               }`}
-//                             />
-//                           </svg>
-//                           <div>
-//                             <p className="text-sm opacity-80">{item.label}</p>
-//                             <p className={`${item.className || ""}`}>
-//                               {item.value}
-//                             </p>
-//                           </div>
-//                         </div>
-//                       ))}
-//                     </div> */}
-
 //                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 //                       {[
 //                         { label: "Role", value: user.Role, icon: "badge" },
@@ -229,7 +214,7 @@
 //                           icon: "currency-rupee",
 //                           className:
 //                             "font-bold text-lg flex items-center gap-2",
-//                           isBalance: true, // Custom flag to conditionally render the reload icon
+//                           isBalance: true,
 //                         },
 //                         {
 //                           label: "Account Status",
@@ -242,6 +227,16 @@
 //                           value: memberSince,
 //                           icon: "calendar",
 //                         },
+//                         {
+//                           label: "Date of Birth",
+//                           value: user.DateOfBirth
+//                             ? new Date(user.DateOfBirth).toLocaleDateString(
+//                                 "en-GB"
+//                               ) // DD/MM/YYYY
+//                             : "N/A",
+
+//                           icon: "calendar",
+//                         },
 //                       ].map((item) => (
 //                         <div key={item.label} className="flex items-start">
 //                           <svg
@@ -255,7 +250,7 @@
 //                               strokeLinecap="round"
 //                               strokeLinejoin="round"
 //                               strokeWidth={2}
-//                               d={`${
+//                               d={
 //                                 item.icon === "badge"
 //                                   ? "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
 //                                   : item.icon === "currency-rupee"
@@ -263,12 +258,12 @@
 //                                   : item.icon === "shield-check"
 //                                   ? "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
 //                                   : "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-//                               }`}
+//                               }
 //                             />
 //                           </svg>
 //                           <div className="flex flex-col">
 //                             <p className="text-sm opacity-80">{item.label}</p>
-//                             <p className={`${item.className || ""}`}>
+//                             <p className={item.className || ""}>
 //                               {item.value}
 //                               {item.isBalance && (
 //                                 <TfiReload
@@ -346,6 +341,26 @@
 //                         </svg>
 //                         Withdraw Funds
 //                       </button>
+//                       <button
+//                         onClick={() => setActiveTab("change-password")}
+//                         className={`px-4 py-2 rounded-lg font-medium flex items-center ${buttonColor} transition-colors`}
+//                       >
+//                         <svg
+//                           className="w-4 h-4 mr-2"
+//                           fill="none"
+//                           stroke="currentColor"
+//                           viewBox="0 0 24 24"
+//                           xmlns="http://www.w3.org/2000/svg"
+//                         >
+//                           <path
+//                             strokeLinecap="round"
+//                             strokeLinejoin="round"
+//                             strokeWidth={2}
+//                             d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+//                           />
+//                         </svg>
+//                         Change Password
+//                       </button>
 //                     </div>
 //                   </div>
 //                 </div>
@@ -413,6 +428,44 @@
 //             </div>
 //           )}
 
+//           {activeTab === "change-password" && (
+//             <div className="p-6 md:p-8">
+//               <div className="flex items-center mb-6">
+//                 <button
+//                   onClick={() => setActiveTab("profile")}
+//                   className="mr-4 p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
+//                 >
+//                   <svg
+//                     className="w-5 h-5"
+//                     fill="none"
+//                     stroke="currentColor"
+//                     viewBox="0 0 24 24"
+//                     xmlns="http://www.w3.org/2000/svg"
+//                   >
+//                     <path
+//                       strokeLinecap="round"
+//                       strokeLinejoin="round"
+//                       strokeWidth={2}
+//                       d="M10 19l-7-7m0 0l7-7m-7 7h18"
+//                     />
+//                   </svg>
+//                 </button>
+//                 <h2 className="text-2xl font-bold">Change Password</h2>
+//               </div>
+//               {/* <ChangePasswordForm
+//                 theme={theme}
+//                 onPasswordChange={handlePasswordChange}
+//                 isLoading={isLoading}
+//               /> */}
+
+//               <ChangePasswordForm
+//                 theme={theme}
+//                 onPasswordChange={handlePasswordChange}
+//                 isLoading={isLoading}
+//               />
+//             </div>
+//           )}
+
 //           {isLoading && (
 //             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
 //               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
@@ -432,9 +485,13 @@
 //   );
 // };
 
+
+
+
+
+
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-// import toast from "react-hot-toast";
 import { toast } from "sonner";
 import { DepositForm } from "./Profile/DepositForm";
 import { WithdrawForm } from "./Profile/WithdrawForm";
@@ -548,6 +605,9 @@ export const Profile = () => {
   const buttonColor = isGreenTheme
     ? "bg-green-600 hover:bg-green-700"
     : "bg-gray-700 hover:bg-gray-600";
+  const activeTabColor = isGreenTheme
+    ? "bg-green-600 text-white"
+    : "bg-gray-700 text-white";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 pt-20">
@@ -555,7 +615,7 @@ export const Profile = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Tabs */}
         <div className="flex overflow-x-auto pb-2 mb-6 scrollbar-hide">
-          <div className="flex space-x-1 rounded-lg bg-gray-200 dark:bg-gray-800 p-1">
+          <div className="flex space-x-1 rounded-lg bg-gray-200 dark:bg-gray-800 p-1 min-w-max">
             {(
               [
                 "profile",
@@ -567,13 +627,9 @@ export const Profile = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
                   activeTab === tab
-                    ? `${
-                        isGreenTheme
-                          ? "bg-green-600 text-white"
-                          : "bg-gray-700 text-white"
-                      }`
+                    ? activeTabColor
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700"
                 }`}
               >
@@ -587,42 +643,45 @@ export const Profile = () => {
 
         {/* Content */}
         <div
-          className={`bg-gradient-to-br ${bgColor} rounded-xl shadow-xl overflow-hidden border ${borderColor}`}
+          className={`bg-gradient-to-br ${bgColor} rounded-xl shadow-xl overflow-hidden border ${borderColor} relative`}
         >
           {activeTab === "profile" && (
-            <div className="p-6 md:p-8">
-              <div className="flex flex-col md:flex-row gap-8 items-start">
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+                {/* Profile Picture Section */}
                 <div className="w-full md:w-auto flex flex-col items-center">
-                  <div className="relative group flex ">
-                    <img
-                      src={
-                        user.profilePic || "https://avatar.vercel.sh/username"
-                      }
-                      alt="Profile"
-                      className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white dark:border-gray-800 transition-transform duration-300 group-hover:scale-105 "
-                    />
-                    {/* <div className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50">
-                      <span className="text-white text-sm font-medium">
-                        Edit
-                      </span>
-                    </div> */}
-                  </div>
-                  <div className="mt-4 text-center">
-                    <h2 className="text-2xl font-bold">{user.username}</h2>
-                    <p className={`text-sm ${textColor}`}>{user.email}</p>
-                    <div className="mt-2 flex justify-center space-x-2">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                        Verified
-                      </span>
+                  <div className="relative group">
+                    <div className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
+                      <img
+                        src={
+                          user.profilePic || "https://avatar.vercel.sh/username"
+                        }
+                        alt="Profile"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="mt-4 text-center">
+                      <h2 className="text-xl md:text-2xl font-bold text-white">
+                        {user.username}
+                      </h2>
+                      <p className={`text-xs md:text-sm ${textColor}`}>
+                        {user.email}
+                      </p>
+                      <div className="mt-2 flex justify-center">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          Verified
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex-1 w-full space-y-6">
+                {/* Account Details Section */}
+                <div className="flex-1 w-full space-y-4 md:space-y-6">
                   <div
-                    className={`p-6 rounded-lg bg-white bg-opacity-10 backdrop-blur-sm border ${borderColor}`}
+                    className={`p-4 sm:p-6 rounded-lg bg-white bg-opacity-5 backdrop-blur-sm border ${borderColor}`}
                   >
-                    <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 flex items-center text-white">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -639,7 +698,7 @@ export const Profile = () => {
                       </svg>
                       Account Details
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       {[
                         { label: "Role", value: user.Role, icon: "badge" },
                         {
@@ -647,7 +706,7 @@ export const Profile = () => {
                           value: `₹${user.balance?.toLocaleString() || "0"}`,
                           icon: "currency-rupee",
                           className:
-                            "font-bold text-lg flex items-center gap-2",
+                            "font-bold text-md md:text-lg flex items-center gap-2 text-white",
                           isBalance: true,
                         },
                         {
@@ -666,15 +725,17 @@ export const Profile = () => {
                           value: user.DateOfBirth
                             ? new Date(user.DateOfBirth).toLocaleDateString(
                                 "en-GB"
-                              ) // DD/MM/YYYY
+                              )
                             : "N/A",
-
                           icon: "calendar",
                         },
                       ].map((item) => (
-                        <div key={item.label} className="flex items-start">
+                        <div
+                          key={item.label}
+                          className="flex items-start space-x-2"
+                        >
                           <svg
-                            className={`w-5 h-5 mr-2 mt-0.5 ${textColor}`}
+                            className={`w-4 h-4 md:w-5 md:h-5 mt-0.5 flex-shrink-0 ${textColor}`}
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -696,14 +757,20 @@ export const Profile = () => {
                             />
                           </svg>
                           <div className="flex flex-col">
-                            <p className="text-sm opacity-80">{item.label}</p>
-                            <p className={item.className || ""}>
+                            <p className="text-xs md:text-sm opacity-80 text-gray-300">
+                              {item.label}
+                            </p>
+                            <p
+                              className={`${
+                                item.className || "text-white text-sm md:text-base"
+                              }`}
+                            >
                               {item.value}
                               {item.isBalance && (
                                 <TfiReload
-                                  size={22}
+                                  size={18}
                                   onClick={getUserBalance}
-                                  className="inline ml-2 text-white hover:text-black cursor-pointer transition-transform duration-200 hover:rotate-90 font-bold"
+                                  className="inline ml-2 text-white hover:text-green-300 cursor-pointer transition-transform duration-200 hover:rotate-90"
                                   title="Refresh Balance"
                                 />
                               )}
@@ -714,10 +781,11 @@ export const Profile = () => {
                     </div>
                   </div>
 
+                  {/* Quick Actions Section */}
                   <div
-                    className={`p-6 rounded-lg bg-white bg-opacity-10 backdrop-blur-sm border ${borderColor}`}
+                    className={`p-4 sm:p-6 rounded-lg bg-white bg-opacity-5 backdrop-blur-sm border ${borderColor}`}
                   >
-                    <h3 className="text-xl font-semibold mb-4 flex items-center">
+                    <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 flex items-center text-white">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -734,13 +802,13 @@ export const Profile = () => {
                       </svg>
                       Quick Actions
                     </h3>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 md:gap-3">
                       <button
                         onClick={() => setActiveTab("deposit")}
-                        className={`px-4 py-2 rounded-lg font-medium flex items-center ${buttonColor} transition-colors`}
+                        className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium flex items-center ${buttonColor} transition-colors text-white`}
                       >
                         <svg
-                          className="w-4 h-4 mr-2"
+                          className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -753,14 +821,14 @@ export const Profile = () => {
                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        Deposit Funds
+                        Deposit
                       </button>
                       <button
                         onClick={() => setActiveTab("withdraw")}
-                        className={`px-4 py-2 rounded-lg font-medium flex items-center ${buttonColor} transition-colors`}
+                        className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium flex items-center ${buttonColor} transition-colors text-white`}
                       >
                         <svg
-                          className="w-4 h-4 mr-2"
+                          className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -773,14 +841,14 @@ export const Profile = () => {
                             d="M8 7l4-4m0 0l4 4m-4-4v18m-6-3h12a2 2 0 002-2V5a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                           />
                         </svg>
-                        Withdraw Funds
+                        Withdraw
                       </button>
                       <button
                         onClick={() => setActiveTab("change-password")}
-                        className={`px-4 py-2 rounded-lg font-medium flex items-center ${buttonColor} transition-colors`}
+                        className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium flex items-center ${buttonColor} transition-colors text-white`}
                       >
                         <svg
-                          className="w-4 h-4 mr-2"
+                          className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -803,14 +871,14 @@ export const Profile = () => {
           )}
 
           {activeTab === "deposit" && (
-            <div className="p-6 md:p-8">
-              <div className="flex items-center mb-6">
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex items-center mb-4 md:mb-6">
                 <button
                   onClick={() => setActiveTab("profile")}
-                  className="mr-4 p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
+                  className="mr-3 p-1.5 md:p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 md:w-5 md:h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -824,21 +892,23 @@ export const Profile = () => {
                     />
                   </svg>
                 </button>
-                <h2 className="text-2xl font-bold">Deposit Funds</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-white">
+                  Deposit Funds
+                </h2>
               </div>
               <DepositForm theme={theme} />
             </div>
           )}
 
           {activeTab === "withdraw" && (
-            <div className="p-6 md:p-8">
-              <div className="flex items-center mb-6">
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex items-center mb-4 md:mb-6">
                 <button
                   onClick={() => setActiveTab("profile")}
-                  className="mr-4 p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
+                  className="mr-3 p-1.5 md:p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 md:w-5 md:h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -852,7 +922,9 @@ export const Profile = () => {
                     />
                   </svg>
                 </button>
-                <h2 className="text-2xl font-bold">Withdraw Funds</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-white">
+                  Withdraw Funds
+                </h2>
               </div>
               <WithdrawForm
                 currentBalance={user.balance || 0}
@@ -863,14 +935,14 @@ export const Profile = () => {
           )}
 
           {activeTab === "change-password" && (
-            <div className="p-6 md:p-8">
-              <div className="flex items-center mb-6">
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex items-center mb-4 md:mb-6">
                 <button
                   onClick={() => setActiveTab("profile")}
-                  className="mr-4 p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
+                  className="mr-3 p-1.5 md:p-2 rounded-full hover:bg-white hover:bg-opacity-10 transition-colors"
                 >
                   <svg
-                    className="w-5 h-5"
+                    className="w-4 h-4 md:w-5 md:h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -884,14 +956,10 @@ export const Profile = () => {
                     />
                   </svg>
                 </button>
-                <h2 className="text-2xl font-bold">Change Password</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-white">
+                  Change Password
+                </h2>
               </div>
-              {/* <ChangePasswordForm
-                theme={theme}
-                onPasswordChange={handlePasswordChange}
-                isLoading={isLoading}
-              /> */}
-
               <ChangePasswordForm
                 theme={theme}
                 onPasswordChange={handlePasswordChange}
@@ -907,13 +975,16 @@ export const Profile = () => {
           )}
         </div>
 
-        <ReferralSection
-          referralData={{
-            referralCode: user.referralCode || "",
-            referredBy: user.referredBy,
-            balance: user.balance,
-          }}
-        />
+        {/* Referral Section */}
+        <div className="mt-6">
+          <ReferralSection
+            referralData={{
+              referralCode: user.referralCode || "",
+              referredBy: user.referredBy,
+              balance: user.balance,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
