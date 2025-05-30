@@ -459,7 +459,7 @@ export default function HeadTailGame() {
   return (
     <>
       <Navbar />
-      <div className={`min-h-screen ${colors.bg} ${colors.text} p-4 pt-[7vh]`}>
+      <div className={`min-h-screen ${colors.bg} ${colors.text} p-4 mt-24 `}>
         <div className="max-w-md mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -656,3 +656,7 @@ export default function HeadTailGame() {
     </>
   );
 }
+
+
+
+

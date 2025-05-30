@@ -239,7 +239,7 @@ const AdminDashboard = () => {
   const isWithdrawalTab = activeTab.includes("withdrawals");
 
   return (
-    <div className=" bg-gray-900 min-h-screen">
+    <div className=" bg-gray-900 min-h-screen pt-20">
       <Navbar/>
       <div className="max-w-7xl mx-auto mt-[7vh] *:p-4 md:p-6">
         {/* Header */}

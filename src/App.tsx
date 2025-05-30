@@ -18,6 +18,7 @@ import Navbar from "./components/Navbar";
 import ForexTradingApp from "./components/Games/ForexTrading/ForexTradingApp";
 import ContactSection from "./components/ContactSection";
 import { Toaster } from "sonner";
+import ColorGame from "./components/Games/ColorTrading/ColorGame";
 // import {ForexTradingApp} from "./components/Games/ForexTrading/ForexTradingApp";
 function App() {
   const route = createBrowserRouter([
@@ -78,6 +79,10 @@ function App() {
       path: "/wheel-game",
       element: <WheelGame />,
     },
+    {
+      path: "/color-trading",
+      element: <ColorGame    />,
+    },
 
     {
       path: "*",
@@ -86,15 +91,17 @@ function App() {
   ]);
 
   return (
-    <Provider store={store}>
+    <Provider store={store} >
       <RouterProvider router={route} />
 
       {/* <Toaster richColors position="top-right" duration={2900}  /> */}
       {/* <Toaster richColors position="bottom-center" duration={2900} /> */}
       <Toaster
+    
         richColors
         position="top-center" // or "bottom-center" for better mobile UX
         duration={2900}
+        
         toastOptions={{
           style: {
             maxWidth: "90vw", // Responsive width
