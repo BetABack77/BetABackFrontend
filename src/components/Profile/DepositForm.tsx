@@ -49,6 +49,22 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
     }
   };
 
+  const handlePayment = () => {
+    if (!amount) return alert("Please enter amount");
+
+    const upiUrl = `upi://pay?pa=ameyalaadd@ibl&pn=BetABack&am=${amount}&cu=INR`;
+
+    // Check if device is Android
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (isAndroid) {
+      // Redirect to UPI payment intent
+      window.location.href = upiUrl;
+    } else {
+      toast.error("UPI payments are only supported on Android mobile devices.");
+    }
+  };
+
   const removeImage = () => {
     setPaymentScreenshot(null);
     setPreviewImage(null);
@@ -275,6 +291,16 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
                     Please complete the payment and submit the screenshot below
                   </p>
                 </div>
+                <button
+                  onClick={handlePayment}
+                  className={`w-full py-3 rounded-lg font-bold text-white text-lg transition-all duration-200 ${
+                    isGreenTheme
+                      ? "bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg"
+                      : "bg-gray-700 hover:bg-gray-600 shadow-md hover:shadow-lg"
+                  }`}
+                >
+                  💰 Pay via UPI
+                </button>
               </div>
 
               <div className="space-y-4">
