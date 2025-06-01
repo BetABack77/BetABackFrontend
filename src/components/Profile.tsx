@@ -716,6 +716,11 @@ export const Profile = () => {
                           className: "text-green-400",
                         },
                         {
+                          label: "Phone Number",
+                          value: user?.phoneNumber || "N/A",
+                          icon: "calendar",
+                        },
+                        {
                           label: "Member Since",
                           value: memberSince,
                           icon: "calendar",

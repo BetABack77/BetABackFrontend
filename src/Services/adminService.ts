@@ -191,6 +191,88 @@ class AdminService {
       console.error("Error rejecting withdraw:", error);
     }
   }
+
+
+
+  async getAllUsers(token: any) {
+    try {
+      const res = await axiosInstance.get("/admin/getAllUsers", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // console.log("All users:", res.data);
+      if (res.data.success) {
+        return res.data;
+      }
+      toast.error("Failed to fetch all users");
+    } catch (error) {
+      toast.error("Failed to fetch all users");
+      console.error("Error fetching all users:", error);
+    }
+  }
+
+
+  async getDashboardStats(token: any) {
+    try {
+      const res = await axiosInstance.get("/admin/getDashboardStats", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // console.log("Dashboard stats:", res.data);
+      if (res.data.success) {
+        return res.data;
+      }
+      toast.error("Failed to fetch dashboard stats");
+    } catch (error) {
+      toast.error("Failed to fetch dashboard stats");
+      console.error("Error fetching dashboard stats:", error);
+    }
+  }
+
+
+  async searchUsers(query: string, token: any) {
+    try {
+      const res = await axiosInstance.get(`/admin/searchUsers?query=${query}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // console.log("Search results:", res.data);
+      if (res.data.success) {
+        return res.data;
+      }
+      toast.error("Failed to search users");
+    } catch (error) {
+      toast.error("Failed to search users");
+      console.error("Error searching users:", error);
+    }
+  }
+
+
+  async getUserDetails(userId: string, token: any) {
+    try {
+      const res = await axiosInstance.get(`/admin/getUserDetails/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log("User details:", res.data);
+      if (res.data.success) {
+        return res.data;
+      }
+      toast.error("Failed to fetch user details");
+    } catch (error) {
+      toast.error("Failed to fetch user details");
+      console.error("Error fetching user details:", error);
+    }
+  }
+
+  
 }
 
 export const adminService = new AdminService();

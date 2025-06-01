@@ -240,16 +240,6 @@
 
 // export default Signup;
 
-
-
-
-
-
-
-
-
-
-
 import React, { useState } from "react";
 import { useTheme } from "../utils/ThemeContext";
 import logo from "../assets/logo.jpg";
@@ -271,7 +261,8 @@ const Signup: React.FC = () => {
     password: "",
     confirmPassword: "",
     referralCode: ref || "",
-    dob: ""
+    dob: "",
+    phone: "",
   });
 
   const [otp, setOtp] = useState("");
@@ -297,27 +288,31 @@ const Signup: React.FC = () => {
   const buttonBg = isGreen
     ? "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400"
     : "bg-gradient-to-r from-zinc-600 to-zinc-500 hover:from-zinc-500 hover:to-zinc-400";
-  const linkColor = isGreen ? "text-green-300 hover:text-green-200" : "text-zinc-300 hover:text-zinc-200";
+  const linkColor = isGreen
+    ? "text-green-300 hover:text-green-200"
+    : "text-zinc-300 hover:text-zinc-200";
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    const { name, email, password, confirmPassword, dob } = formData;
+    const { name, email, password, confirmPassword, dob, phone } = formData;
 
     if (!name.trim()) newErrors.name = "Full name is required";
-    else if (name.length < 3) newErrors.name = "Name must be at least 3 characters";
+    else if (name.length < 3)
+      newErrors.name = "Name must be at least 3 characters";
 
     if (!email.trim()) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Please enter a valid email";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "Please enter a valid email";
 
     if (!password) newErrors.password = "Password is required";
     else if (password.length < 3 || password.length > 10) {
@@ -327,6 +322,10 @@ const Signup: React.FC = () => {
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
     }
+
+    if (!phone) newErrors.phone = "Phone number is required";
+    else if (!/^\d{10}$/.test(phone))
+      newErrors.phone = "Phone number must be 10 digits";
 
     if (!dob) newErrors.dob = "Date of birth is required";
     else {
@@ -342,7 +341,7 @@ const Signup: React.FC = () => {
   // Generate OTP
   const handleGenerateOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -365,22 +364,23 @@ const Signup: React.FC = () => {
   // Handle signup
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!otp.trim()) {
-      setErrors(prev => ({ ...prev, otp: "OTP is required" }));
+      setErrors((prev) => ({ ...prev, otp: "OTP is required" }));
       return;
     }
 
     setIsLoading(true);
     try {
-      const { name, email, password, referralCode, dob } = formData;
+      const { name, email, password, referralCode, dob,phone } = formData;
       const res = await authService.signup({
         username: name,
         email,
         password,
         otp,
         referralCode,
-        dateOfBirth: dob
+        dateOfBirth: dob,
+        phone,
       });
 
       if (res?.success) {
@@ -390,7 +390,8 @@ const Signup: React.FC = () => {
         toast.error(res?.message || "Signup failed");
       }
     } catch (error: any) {
-      const errorMsg = error.response?.data?.message || "Signup error. Please try again.";
+      const errorMsg =
+        error.response?.data?.message || "Signup error. Please try again.";
       toast.error(errorMsg);
       console.error("Signup error:", error);
     } finally {
@@ -399,7 +400,9 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen ${bg} ${text} flex items-center justify-center p-4`}>
+    <div
+      className={`min-h-screen ${bg} ${text} flex items-center justify-center p-4`}
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -408,8 +411,10 @@ const Signup: React.FC = () => {
       >
         <div className="bg-white/5 backdrop-blur-lg rounded-xl shadow-2xl overflow-hidden border border-white/10">
           {/* Decorative header */}
-          <div className={`h-2 ${isGreen ? "bg-green-500" : "bg-zinc-500"}`}></div>
-          
+          <div
+            className={`h-2 ${isGreen ? "bg-green-500" : "bg-zinc-500"}`}
+          ></div>
+
           <div className="p-8">
             {otpSent && (
               <button
@@ -429,15 +434,25 @@ const Signup: React.FC = () => {
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
               />
             </div>
-            
-            <h2 className="text-3xl font-bold text-center mb-2">Create Account</h2>
-            <p className="text-center mb-8 text-white/70">Join our community today</p>
 
-            <form onSubmit={otpSent ? handleSignup : handleGenerateOtp} className="space-y-4">
+            <h2 className="text-3xl font-bold text-center mb-2">
+              Create Account
+            </h2>
+            <p className="text-center mb-8 text-white/70">
+              Join our community today
+            </p>
+
+            <form
+              onSubmit={otpSent ? handleSignup : handleGenerateOtp}
+              className="space-y-4"
+            >
               {!otpSent ? (
                 <>
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Full Name
                     </label>
                     <input
@@ -450,7 +465,7 @@ const Signup: React.FC = () => {
                       className={`w-full px-4 py-3 rounded-lg ${inputBg} border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200`}
                     />
                     {errors.name && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-1 text-sm text-red-400"
@@ -461,7 +476,10 @@ const Signup: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Email
                     </label>
                     <input
@@ -474,7 +492,7 @@ const Signup: React.FC = () => {
                       className={`w-full px-4 py-3 rounded-lg ${inputBg} border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200`}
                     />
                     {errors.email && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-1 text-sm text-red-400"
@@ -485,7 +503,10 @@ const Signup: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Password (3-10 characters)
                     </label>
                     <div className="relative">
@@ -509,7 +530,7 @@ const Signup: React.FC = () => {
                       </button>
                     </div>
                     {errors.password && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-1 text-sm text-red-400"
@@ -520,7 +541,10 @@ const Signup: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Confirm Password
                     </label>
                     <input
@@ -533,7 +557,7 @@ const Signup: React.FC = () => {
                       className={`w-full px-4 py-3 rounded-lg ${inputBg} border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200`}
                     />
                     {errors.confirmPassword && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-1 text-sm text-red-400"
@@ -544,7 +568,37 @@ const Signup: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="dob" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium mb-1"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="1234567890"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 rounded-lg ${inputBg} border ${inputBorder} focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200`}
+                    />
+                    {errors.phone && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-1 text-sm text-red-400"
+                      >
+                        {errors.phone}
+                      </motion.p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="dob"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Date of Birth
                     </label>
                     <input
@@ -562,7 +616,7 @@ const Signup: React.FC = () => {
                       }}
                     />
                     {errors.dob && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-1 text-sm text-red-400"
@@ -573,7 +627,10 @@ const Signup: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="referralCode" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="referralCode"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Referral Code (optional)
                     </label>
                     <input
@@ -595,7 +652,10 @@ const Signup: React.FC = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="otp" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="otp"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Enter OTP
                     </label>
                     <input
@@ -608,7 +668,7 @@ const Signup: React.FC = () => {
                       maxLength={6}
                     />
                     {errors.otp && (
-                      <motion.p 
+                      <motion.p
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-1 text-sm text-red-400"
@@ -639,14 +699,32 @@ const Signup: React.FC = () => {
               >
                 {isLoading ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     {otpSent ? "Verifying..." : "Processing..."}
                   </>
+                ) : otpSent ? (
+                  "Verify & Sign Up"
                 ) : (
-                  otpSent ? "Verify & Sign Up" : "Get OTP"
+                  "Get OTP"
                 )}
               </motion.button>
             </form>
