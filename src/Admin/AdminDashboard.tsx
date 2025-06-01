@@ -441,8 +441,8 @@
 //                         <td className="px-4 py-3 whitespace-nowrap">
 //                           {transaction.user.BankDetails ? (
 //                             <button
-//                               onClick={() => 
-//                                 transaction.user.BankDetails && 
+//                               onClick={() =>
+//                                 transaction.user.BankDetails &&
 //                                 openBankDetailsModal(transaction.user.BankDetails)
 //                               }
 //                               className="text-blue-400 hover:text-blue-300 text-sm font-medium"
@@ -613,30 +613,19 @@
 
 // export default AdminDashboard;
 
-
-
-
-
-
-                              
-
-
-
-
-
-
-
-
-
-
 // AdminDashboard.tsx
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
-import { 
-  User as UserIcon, Search, Clock, CreditCard, 
-  BarChart2, Activity, Shield, X, ArrowUp, ArrowDown,
-  Calendar, History, DollarSign, Info
+import {
+  User as UserIcon,
+  Search,
+  Clock,
+  CreditCard,
+  BarChart2,
+  Activity,
+  X,
+  DollarSign,
 } from "react-feather";
 import { adminService } from "../Services/adminService";
 import Navbar from "../components/Navbar";
@@ -713,8 +702,12 @@ const AdminDashboard = () => {
   // State for all transaction types
   const [pendingDeposits, setPendingDeposits] = useState<Transaction[]>([]);
   const [approvedDeposits, setApprovedDeposits] = useState<Transaction[]>([]);
-  const [pendingWithdrawals, setPendingWithdrawals] = useState<Transaction[]>([]);
-  const [approvedWithdrawals, setApprovedWithdrawals] = useState<Transaction[]>([]);
+  const [pendingWithdrawals, setPendingWithdrawals] = useState<Transaction[]>(
+    []
+  );
+  const [approvedWithdrawals, setApprovedWithdrawals] = useState<Transaction[]>(
+    []
+  );
   const [allUsers, setAllUsers] = useState<UserDetails[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null);
   const [userHistory, setUserHistory] = useState<{
@@ -730,7 +723,7 @@ const AdminDashboard = () => {
     totalDeposits: 0,
     totalWithdrawals: 0,
     pendingDepositsCount: 0,
-    pendingWithdrawalsCount: 0
+    pendingWithdrawalsCount: 0,
   });
 
   const [loading, setLoading] = useState({
@@ -740,60 +733,76 @@ const AdminDashboard = () => {
     approvedWithdrawals: false,
     users: false,
     dashboard: false,
-    userHistory: false
+    userHistory: false,
   });
 
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedBankDetails, setSelectedBankDetails] = useState<BankDetails | null>(null);
+  const [selectedBankDetails, setSelectedBankDetails] =
+    useState<BankDetails | null>(null);
 
   // Fetch all data
   const fetchAllData = async () => {
     try {
       setIsRefreshing(true);
-      
+
       // Fetch dashboard stats
       if (activeTab === "dashboard") {
-        setLoading(prev => ({ ...prev, dashboard: true }));
+        setLoading((prev) => ({ ...prev, dashboard: true }));
         const statsRes = await adminService.getDashboardStats(token);
         if (statsRes.success) setStats(statsRes.data);
       }
 
       // Fetch pending deposits
-      setLoading(prev => ({ ...prev, pendingDeposits: true }));
-      const pendingDepositsRes = await adminService.getAllPendingDeposits(token);
+      setLoading((prev) => ({ ...prev, pendingDeposits: true }));
+      const pendingDepositsRes = await adminService.getAllPendingDeposits(
+        token
+      );
       if (pendingDepositsRes.success) {
         setPendingDeposits(pendingDepositsRes.data);
-        setStats(prev => ({ ...prev, pendingDepositsCount: pendingDepositsRes.data.length }));
+        setStats((prev) => ({
+          ...prev,
+          pendingDepositsCount: pendingDepositsRes.data.length,
+        }));
       }
 
       // Fetch approved deposits
-      setLoading(prev => ({ ...prev, approvedDeposits: true }));
-      const approvedDepositsRes = await adminService.getAllApprovedDeposits(token);
-      if (approvedDepositsRes.success) setApprovedDeposits(approvedDepositsRes.data);
+      setLoading((prev) => ({ ...prev, approvedDeposits: true }));
+      const approvedDepositsRes = await adminService.getAllApprovedDeposits(
+        token
+      );
+      if (approvedDepositsRes.success)
+        setApprovedDeposits(approvedDepositsRes.data);
 
       // Fetch pending withdrawals
-      setLoading(prev => ({ ...prev, pendingWithdrawals: true }));
-      const pendingWithdrawalsRes = await adminService.getAllPendingWithdraws(token);
+      setLoading((prev) => ({ ...prev, pendingWithdrawals: true }));
+      const pendingWithdrawalsRes = await adminService.getAllPendingWithdraws(
+        token
+      );
       if (pendingWithdrawalsRes.success) {
         setPendingWithdrawals(pendingWithdrawalsRes.data);
-        setStats(prev => ({ ...prev, pendingWithdrawalsCount: pendingWithdrawalsRes.data.length }));
+        setStats((prev) => ({
+          ...prev,
+          pendingWithdrawalsCount: pendingWithdrawalsRes.data.length,
+        }));
       }
 
       // Fetch approved withdrawals
-      setLoading(prev => ({ ...prev, approvedWithdrawals: true }));
-      const approvedWithdrawalsRes = await adminService.getAllApprovedWithdraws(token);
-      if (approvedWithdrawalsRes.success) setApprovedWithdrawals(approvedWithdrawalsRes.data);
+      setLoading((prev) => ({ ...prev, approvedWithdrawals: true }));
+      const approvedWithdrawalsRes = await adminService.getAllApprovedWithdraws(
+        token
+      );
+      if (approvedWithdrawalsRes.success)
+        setApprovedWithdrawals(approvedWithdrawalsRes.data);
 
       // Fetch all users
-      setLoading(prev => ({ ...prev, users: true }));
+      setLoading((prev) => ({ ...prev, users: true }));
       const usersRes = await adminService.getAllUsers(token);
       if (usersRes.success) {
         setAllUsers(usersRes.data);
-        setStats(prev => ({ ...prev, totalUsers: usersRes.data.length }));
+        setStats((prev) => ({ ...prev, totalUsers: usersRes.data.length }));
       }
-
     } catch (error) {
       toast.error("Failed to fetch data");
     } finally {
@@ -804,7 +813,7 @@ const AdminDashboard = () => {
         approvedWithdrawals: false,
         users: false,
         dashboard: false,
-        userHistory: false
+        userHistory: false,
       });
       setIsRefreshing(false);
     }
@@ -813,20 +822,20 @@ const AdminDashboard = () => {
   // Fetch user history
   const fetchUserHistory = async (userId: string) => {
     try {
-      setLoading(prev => ({ ...prev, userHistory: true }));
+      setLoading((prev) => ({ ...prev, userHistory: true }));
       const res = await adminService.getUserDetails(userId, token);
       if (res.success) {
         setUserHistory({
           deposits: res.data.deposits,
           withdrawals: res.data.withdrawals,
           gameHistory: res.data.gameHistory,
-          bankDetails: res.data.bankDetails
+          bankDetails: res.data.bankDetails,
         });
       }
     } catch (error) {
       toast.error("Failed to fetch user history");
     } finally {
-      setLoading(prev => ({ ...prev, userHistory: false }));
+      setLoading((prev) => ({ ...prev, userHistory: false }));
     }
   };
 
@@ -910,8 +919,8 @@ const AdminDashboard = () => {
         fetchAllData();
         return;
       }
-      
-      setLoading(prev => ({ ...prev, users: true }));
+
+      setLoading((prev) => ({ ...prev, users: true }));
       const res = await adminService.searchUsers(searchTerm, token);
       if (res.success) {
         setAllUsers(res.data);
@@ -919,7 +928,7 @@ const AdminDashboard = () => {
     } catch (error) {
       toast.error("Failed to search users");
     } finally {
-      setLoading(prev => ({ ...prev, users: false }));
+      setLoading((prev) => ({ ...prev, users: false }));
     }
   };
 
@@ -938,11 +947,11 @@ const AdminDashboard = () => {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
       minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -1008,13 +1017,15 @@ const AdminDashboard = () => {
   return (
     <div className="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen pt-20">
       <Navbar />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-            <p className="text-gray-400 mt-1">Manage users, deposits, and withdrawals</p>
+            <p className="text-gray-400 mt-1">
+              Manage users, deposits, and withdrawals
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -1180,8 +1191,12 @@ const AdminDashboard = () => {
             <div className="bg-gradient-to-br from-indigo-900 to-indigo-800 p-6 rounded-xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-indigo-200 text-sm font-medium">Total Users</p>
-                  <h3 className="text-2xl font-bold text-white mt-1">{stats.totalUsers}</h3>
+                  <p className="text-indigo-200 text-sm font-medium">
+                    Total Users
+                  </p>
+                  <h3 className="text-2xl font-bold text-white mt-1">
+                    {stats.totalUsers}
+                  </h3>
                 </div>
                 <div className="bg-indigo-700 p-3 rounded-full">
                   <UserIcon className="text-white" size={20} />
@@ -1192,8 +1207,12 @@ const AdminDashboard = () => {
             <div className="bg-gradient-to-br from-green-900 to-green-800 p-6 rounded-xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-200 text-sm font-medium">Active Users</p>
-                  <h3 className="text-2xl font-bold text-white mt-1">{stats.activeUsers}</h3>
+                  <p className="text-green-200 text-sm font-medium">
+                    Active Users
+                  </p>
+                  <h3 className="text-2xl font-bold text-white mt-1">
+                    {stats.activeUsers}
+                  </h3>
                 </div>
                 <div className="bg-green-700 p-3 rounded-full">
                   <Activity className="text-white" size={20} />
@@ -1204,8 +1223,12 @@ const AdminDashboard = () => {
             <div className="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-200 text-sm font-medium">Total Deposits</p>
-                  <h3 className="text-2xl font-bold text-white mt-1">{formatCurrency(stats.totalDeposits)}</h3>
+                  <p className="text-blue-200 text-sm font-medium">
+                    Total Deposits
+                  </p>
+                  <h3 className="text-2xl font-bold text-white mt-1">
+                    {formatCurrency(stats.totalDeposits)}
+                  </h3>
                 </div>
                 <div className="bg-blue-700 p-3 rounded-full">
                   <DollarSign className="text-white" size={20} />
@@ -1216,8 +1239,12 @@ const AdminDashboard = () => {
             <div className="bg-gradient-to-br from-purple-900 to-purple-800 p-6 rounded-xl shadow-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-purple-200 text-sm font-medium">Total Withdrawals</p>
-                  <h3 className="text-2xl font-bold text-white mt-1">{formatCurrency(stats.totalWithdrawals)}</h3>
+                  <p className="text-purple-200 text-sm font-medium">
+                    Total Withdrawals
+                  </p>
+                  <h3 className="text-2xl font-bold text-white mt-1">
+                    {formatCurrency(stats.totalWithdrawals)}
+                  </h3>
                 </div>
                 <div className="bg-purple-700 p-3 rounded-full">
                   <CreditCard className="text-white" size={20} />
@@ -1234,10 +1261,12 @@ const AdminDashboard = () => {
               <div className="inline-flex animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-500"></div>
               <p className="mt-4 text-gray-400">Loading data...</p>
             </div>
-          ) : (isDashboardTab ? (
+          ) : isDashboardTab ? (
             <div className="p-6">
-              <h2 className="text-xl font-bold text-white mb-6">Recent Activity</h2>
-              
+              <h2 className="text-xl font-bold text-white mb-6">
+                Recent Activity
+              </h2>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Recent Deposits */}
                 <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
@@ -1247,14 +1276,21 @@ const AdminDashboard = () => {
                   {approvedDeposits.slice(0, 5).length > 0 ? (
                     <div className="space-y-4">
                       {approvedDeposits.slice(0, 5).map((deposit) => (
-                        <div key={deposit._id} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                        <div
+                          key={deposit._id}
+                          className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"
+                        >
                           <div className="flex items-center gap-3">
                             <div className="bg-indigo-900 p-2 rounded-full">
                               <UserIcon size={16} className="text-indigo-300" />
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-white">{deposit.user?.username}</p>
-                              <p className="text-xs text-gray-400">{formatDate(deposit.createdAt)}</p>
+                              <p className="text-sm font-medium text-white">
+                                {deposit.user?.username}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {formatDate(deposit.createdAt)}
+                              </p>
                             </div>
                           </div>
                           <span className="text-green-400 font-semibold">
@@ -1264,7 +1300,9 @@ const AdminDashboard = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-400 text-center py-4">No recent deposits</p>
+                    <p className="text-gray-400 text-center py-4">
+                      No recent deposits
+                    </p>
                   )}
                 </div>
 
@@ -1276,14 +1314,21 @@ const AdminDashboard = () => {
                   {approvedWithdrawals.slice(0, 5).length > 0 ? (
                     <div className="space-y-4">
                       {approvedWithdrawals.slice(0, 5).map((withdrawal) => (
-                        <div key={withdrawal._id} className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                        <div
+                          key={withdrawal._id}
+                          className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"
+                        >
                           <div className="flex items-center gap-3">
                             <div className="bg-purple-900 p-2 rounded-full">
                               <UserIcon size={16} className="text-purple-300" />
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-white">{withdrawal.user?.username}</p>
-                              <p className="text-xs text-gray-400">{formatDate(withdrawal.createdAt)}</p>
+                              <p className="text-sm font-medium text-white">
+                                {withdrawal.user?.username}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {formatDate(withdrawal.createdAt)}
+                              </p>
                             </div>
                           </div>
                           <span className="text-red-400 font-semibold">
@@ -1293,7 +1338,9 @@ const AdminDashboard = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-400 text-center py-4">No recent withdrawals</p>
+                    <p className="text-gray-400 text-center py-4">
+                      No recent withdrawals
+                    </p>
                   )}
                 </div>
               </div>
@@ -1305,48 +1352,84 @@ const AdminDashboard = () => {
                   <tr>
                     {isUsersTab ? (
                       <>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           User
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Email
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Balance
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Joined
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Status
                         </th>
-                        <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Actions
                         </th>
                       </>
                     ) : (
                       <>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           User
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Amount
                         </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                        >
                           Date
                         </th>
                         {isPendingTab && !isWithdrawalTab && (
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                          >
                             Screenshot
                           </th>
                         )}
                         {isPendingTab && isWithdrawalTab && (
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                          >
                             Bank Details
                           </th>
                         )}
                         {isPendingTab && (
-                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider"
+                          >
                             Actions
                           </th>
                         )}
@@ -1357,7 +1440,10 @@ const AdminDashboard = () => {
                 <tbody className="bg-gray-800 divide-y divide-gray-700">
                   {getCurrentData().length > 0 ? (
                     getCurrentData().map((item: any) => (
-                      <tr key={item._id} className="hover:bg-gray-750 transition-colors">
+                      <tr
+                        key={item._id}
+                        className="hover:bg-gray-750 transition-colors"
+                      >
                         {isUsersTab ? (
                           <>
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -1365,7 +1451,10 @@ const AdminDashboard = () => {
                                 <div className="flex-shrink-0 h-10 w-10">
                                   <img
                                     className="h-10 w-10 rounded-full"
-                                    src={item.profilePic || "https://via.placeholder.com/150"}
+                                    src={
+                                      item.profilePic ||
+                                      "https://via.placeholder.com/150"
+                                    }
                                     alt=""
                                   />
                                 </div>
@@ -1415,7 +1504,10 @@ const AdminDashboard = () => {
                                 <div className="flex-shrink-0 h-10 w-10">
                                   <img
                                     className="h-10 w-10 rounded-full"
-                                    src={item.user?.profilePic || "https://via.placeholder.com/150"}
+                                    src={
+                                      item.user?.profilePic ||
+                                      "https://via.placeholder.com/150"
+                                    }
                                     alt=""
                                   />
                                 </div>
@@ -1438,7 +1530,9 @@ const AdminDashboard = () => {
                             {isPendingTab && !isWithdrawalTab && (
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <button
-                                  onClick={() => openImageModal(item.paymentScreenshot)}
+                                  onClick={() =>
+                                    openImageModal(item.paymentScreenshot)
+                                  }
                                   className="text-indigo-500 hover:text-indigo-400 text-sm"
                                 >
                                   View Screenshot
@@ -1449,13 +1543,19 @@ const AdminDashboard = () => {
                               <td className="px-6 py-4 whitespace-nowrap">
                                 {item.user?.BankDetails ? (
                                   <button
-                                    onClick={() => openBankDetailsModal(item.user.BankDetails)}
+                                    onClick={() =>
+                                      openBankDetailsModal(
+                                        item.user.BankDetails
+                                      )
+                                    }
                                     className="text-indigo-500 hover:text-indigo-400 text-sm"
                                   >
                                     View Bank Details
                                   </button>
                                 ) : (
-                                  <span className="text-gray-400 text-sm">No details</span>
+                                  <span className="text-gray-400 text-sm">
+                                    No details
+                                  </span>
                                 )}
                               </td>
                             )}
@@ -1464,7 +1564,9 @@ const AdminDashboard = () => {
                                 <button
                                   onClick={() =>
                                     handleApprove(
-                                      isWithdrawalTab ? "withdrawal" : "deposit",
+                                      isWithdrawalTab
+                                        ? "withdrawal"
+                                        : "deposit",
                                       item._id,
                                       item.user._id
                                     )
@@ -1476,7 +1578,9 @@ const AdminDashboard = () => {
                                 <button
                                   onClick={() =>
                                     handleReject(
-                                      isWithdrawalTab ? "withdrawal" : "deposit",
+                                      isWithdrawalTab
+                                        ? "withdrawal"
+                                        : "deposit",
                                       item._id,
                                       item.user._id
                                     )
@@ -1493,7 +1597,18 @@ const AdminDashboard = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={isUsersTab ? 6 : isPendingTab ? (isWithdrawalTab ? 5 : 5) : 4} className="px-6 py-4 text-center text-gray-400">
+                      <td
+                        colSpan={
+                          isUsersTab
+                            ? 6
+                            : isPendingTab
+                            ? isWithdrawalTab
+                              ? 5
+                              : 5
+                            : 4
+                        }
+                        className="px-6 py-4 text-center text-gray-400"
+                      >
                         {getEmptyMessage()}
                       </td>
                     </tr>
@@ -1501,7 +1616,7 @@ const AdminDashboard = () => {
                 </tbody>
               </table>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -1510,7 +1625,9 @@ const AdminDashboard = () => {
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-lg max-w-4xl w-full max-h-screen overflow-auto">
             <div className="flex justify-between items-center p-4 border-b border-gray-700">
-              <h3 className="text-lg font-medium text-white">Payment Screenshot</h3>
+              <h3 className="text-lg font-medium text-white">
+                Payment Screenshot
+              </h3>
               <button
                 onClick={closeImageModal}
                 className="text-gray-400 hover:text-white"
@@ -1545,19 +1662,27 @@ const AdminDashboard = () => {
             <div className="p-4 space-y-4">
               <div>
                 <p className="text-sm text-gray-400">Bank Name</p>
-                <p className="text-white font-medium">{selectedBankDetails.bankName}</p>
+                <p className="text-white font-medium">
+                  {selectedBankDetails.bankName}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-400">Account Holder</p>
-                <p className="text-white font-medium">{selectedBankDetails.accountHolderName}</p>
+                <p className="text-white font-medium">
+                  {selectedBankDetails.accountHolderName}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-400">Account Number</p>
-                <p className="text-white font-medium">{selectedBankDetails.accountNumber}</p>
+                <p className="text-white font-medium">
+                  {selectedBankDetails.accountNumber}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-400">IFSC Code</p>
-                <p className="text-white font-medium">{selectedBankDetails.ifscCode}</p>
+                <p className="text-white font-medium">
+                  {selectedBankDetails.ifscCode}
+                </p>
               </div>
             </div>
           </div>
@@ -1567,10 +1692,11 @@ const AdminDashboard = () => {
       {/* User Details Modal */}
       {selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4 overflow-auto">
-          
-                  <div className="bg-gray-800 rounded-lg max-w-4xl w-full max-h-screen overflow-auto">
+          <div className="bg-gray-800 rounded-lg max-w-4xl w-full max-h-screen overflow-auto">
             <div className="flex justify-between items-center p-4 border-b border-gray-700 sticky top-0 bg-gray-800 z-10">
-              <h3 className="text-lg font-medium text-white">User Details: {selectedUser.username}</h3>
+              <h3 className="text-lg font-medium text-white">
+                User Details: {selectedUser.username}
+              </h3>
               <button
                 onClick={closeUserDetailsModal}
                 className="text-gray-400 hover:text-white"
@@ -1588,11 +1714,15 @@ const AdminDashboard = () => {
                   <div className="space-y-3">
                     <div>
                       <p className="text-sm text-gray-400">Username</p>
-                      <p className="text-white font-medium">{selectedUser.username}</p>
+                      <p className="text-white font-medium">
+                        {selectedUser.username}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Email</p>
-                      <p className="text-white font-medium">{selectedUser.email}</p>
+                      <p className="text-white font-medium">
+                        {selectedUser.email}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Phone Number</p>
@@ -1602,7 +1732,9 @@ const AdminDashboard = () => {
                     </div>
                     <div>
                       <p className="text-sm text-gray-400">Referral Code</p>
-                      <p className="text-white font-medium">{selectedUser.referralCode}</p>
+                      <p className="text-white font-medium">
+                        {selectedUser.referralCode}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1761,7 +1893,9 @@ const AdminDashboard = () => {
                       </table>
                     </div>
                   ) : (
-                    <p className="text-gray-400 text-center py-4">No deposit history found</p>
+                    <p className="text-gray-400 text-center py-4">
+                      No deposit history found
+                    </p>
                   )}
 
                   {/* Withdrawal History */}
@@ -1809,7 +1943,9 @@ const AdminDashboard = () => {
                       </table>
                     </div>
                   ) : (
-                    <p className="text-gray-400 text-center py-4">No withdrawal history found</p>
+                    <p className="text-gray-400 text-center py-4">
+                      No withdrawal history found
+                    </p>
                   )}
 
                   {/* Game History */}
@@ -1845,7 +1981,9 @@ const AdminDashboard = () => {
                                 -{formatCurrency(game.betAmount)}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-green-400">
-                                {game.winAmount > 0 ? `+${formatCurrency(game.winAmount)}` : "-"}
+                                {game.winAmount > 0
+                                  ? `+${formatCurrency(game.winAmount)}`
+                                  : "-"}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span
@@ -1867,7 +2005,9 @@ const AdminDashboard = () => {
                       </table>
                     </div>
                   ) : (
-                    <p className="text-gray-400 text-center py-4">No game history found</p>
+                    <p className="text-gray-400 text-center py-4">
+                      No game history found
+                    </p>
                   )}
                 </div>
               )}
