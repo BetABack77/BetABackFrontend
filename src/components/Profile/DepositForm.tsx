@@ -18,7 +18,7 @@ type Deposit = {
 };
 
 export const DepositForm = ({ theme }: DepositFormProps) => {
-  const [amount, setAmount] = useState<number>(200);
+  const [amount, setAmount] = useState<number>(100);
   const [showPaymentDetails, setShowPaymentDetails] = useState(false);
   const [transactionId, setTransactionId] = useState<string>("");
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
@@ -55,13 +55,14 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
     const upiUrl = `upi://pay?pa=ameyalaadd@ibl&pn=BetABack&am=${amount}&cu=INR`;
 
     // Check if device is Android
-    const isAndroid = /Android/i.test(navigator.userAgent);
+    // const isWeb = /Android/i.test(navigator.userAgent);
+    const isWeb = /Web/i.test(navigator.userAgent);
 
-    if (isAndroid) {
+    if (isWeb) {
       // Redirect to UPI payment intent
-      window.location.href = upiUrl;
+      toast.error("UPI payments are only supported only on mobile devices.");
     } else {
-      toast.error("UPI payments are only supported on Android mobile devices.");
+      window.location.href = upiUrl;
     }
   };
 
@@ -223,12 +224,12 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
                   <div className="ml-3">
                     <h3
                       className={`text-sm font-medium ${
-                        isGreenTheme ? "text-green-200" : "text-gray-200"
+                        isGreenTheme ? "text-green-100" : "text-gray-100"
                       }`}
                     >
                       Deposit Bonus & Processing Time
                     </h3>
-                    <div className="mt-1 text-sm text-gray-200">
+                    <div className="mt-1 text-sm text-gray-100">
                       <p>• Get 5% bonus on all deposits</p>
                       <p>
                         • Deposits take 15-30 minutes to reflect in your wallet
@@ -239,8 +240,8 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Amount (Minimum 200)
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
+                    Amount (Minimum 100)
                   </label>
                   <input
                     type="tel"
@@ -254,8 +255,8 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
 
                 <button
                   onClick={() => {
-                    if (amount < 200) {
-                      toast.error("Minimum deposit amount is 200");
+                    if (amount < 100) {
+                      toast.error("Minimum deposit amount is 100");
                       return;
                     }
                     setShowPaymentDetails(true);
@@ -286,14 +287,14 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
                 </div>
                 <div className="text-center space-y-1">
                   <p className="text-lg font-medium text-white">₹{amount}</p>
-                  {/* <p className="text-gray-200">UPI ID: your-upi-id@oksbi</p> */}
+                  {/* <p className="text-gray-100">UPI ID: your-upi-id@oksbi</p> */}
                   <p className="text-sm text-gray-400 mt-2">
                     Please complete the payment and submit the screenshot below
                   </p>
                 </div>
                 <button
                   onClick={handlePayment}
-                  className={`w-full py-3 rounded-lg font-bold text-white text-lg transition-all duration-200 ${
+                  className={`w-full py-3 rounded-lg font-bold text-white text-lg transition-all duration-100 ${
                     isGreenTheme
                       ? "bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg"
                       : "bg-gray-700 hover:bg-gray-600 shadow-md hover:shadow-lg"
@@ -305,7 +306,7 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
                     Transaction ID
                   </label>
                   <input
@@ -318,7 +319,7 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                  <label className="block text-sm font-medium text-gray-100 mb-2">
                     Payment Screenshot (Max 2MB)
                   </label>
                   <div className="flex items-center justify-center w-full">
@@ -472,7 +473,7 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
                           {deposit.status.toUpperCase()}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-200 mb-1">
+                      <p className="text-sm text-gray-100 mb-1">
                         <span className="font-medium">Transaction ID:</span>{" "}
                         {deposit.transactionId}
                       </p>
