@@ -56,13 +56,24 @@ export const DepositForm = ({ theme }: DepositFormProps) => {
 
     // Check if device is Android
     // const isWeb = /Android/i.test(navigator.userAgent);
-    const isWeb = /Web/i.test(navigator.userAgent);
+    // const isWeb = /Web/i.test(navigator.userAgent);
 
-    if (isWeb) {
-      // Redirect to UPI payment intent
-      toast.error("UPI payments are only supported only on mobile devices.");
-    } else {
+    // if (isWeb) {
+    //   // Redirect to UPI payment intent
+    //   toast.error("UPI payments are only supported only on mobile devices.");
+    // } else {
+    //   window.location.href = upiUrl;
+    // }
+
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    if (isAndroid) {
       window.location.href = upiUrl;
+    } else if (isIOS) {
+      toast.error("UPI payments are not supported on iOS devices via browser.");
+    } else {
+      toast.error("UPI payments are only supported on Android mobile devices.");
     }
   };
 
