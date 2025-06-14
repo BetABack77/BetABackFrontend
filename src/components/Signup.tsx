@@ -261,7 +261,7 @@ const Signup: React.FC = () => {
     password: "",
     confirmPassword: "",
     referralCode: ref || "",
-    dob: "",
+    // dob: "",
     phone: "",
   });
 
@@ -304,7 +304,7 @@ const Signup: React.FC = () => {
   // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    const { name, email, password, confirmPassword, dob, phone } = formData;
+    const { name, email, password, confirmPassword, phone } = formData;
 
     if (!name.trim()) newErrors.name = "Full name is required";
     else if (name.length < 3)
@@ -327,12 +327,12 @@ const Signup: React.FC = () => {
     else if (!/^\d{10}$/.test(phone))
       newErrors.phone = "Phone number must be 10 digits";
 
-    if (!dob) newErrors.dob = "Date of birth is required";
-    else {
-      const dobDate = new Date(dob);
-      const today = new Date();
-      if (dobDate >= today) newErrors.dob = "Date of birth must be in the past";
-    }
+    // if (!dob) newErrors.dob = "Date of birth is required";
+    // else {
+    //   const dobDate = new Date(dob);
+    //   const today = new Date();
+    //   if (dobDate >= today) newErrors.dob = "Date of birth must be in the past";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -372,14 +372,14 @@ const Signup: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const { name, email, password, referralCode, dob,phone } = formData;
+      const { name, email, password, referralCode,phone } = formData;
       const res = await authService.signup({
         username: name,
         email,
         password,
         otp,
         referralCode,
-        dateOfBirth: dob,
+        // dateOfBirth: dob,
         phone,
       });
 
@@ -593,7 +593,7 @@ const Signup: React.FC = () => {
                       </motion.p>
                     )}
                   </div>
-
+{/* 
                   <div>
                     <label
                       htmlFor="dob"
@@ -624,7 +624,7 @@ const Signup: React.FC = () => {
                         {errors.dob}
                       </motion.p>
                     )}
-                  </div>
+                  </div> */}
 
                   <div>
                     <label
